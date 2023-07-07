@@ -61,6 +61,12 @@ public class PatientService implements IPatientService {
         return buildPatientDTO(responseOp.get());
     }
 
+    @Override
+    public Page<PatientDTO> findByName(String name, Pageable page) {
+        Page<Patient> response = repository.findByName(name, page);
+        return buildPatientDTOList(response);
+    }
+
     private Page<PatientDTO> buildPatientDTOList(Page<Patient> response) {
         return response.map(this::buildPatientDTO);
     }
