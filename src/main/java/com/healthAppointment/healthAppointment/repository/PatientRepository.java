@@ -13,4 +13,7 @@ public interface PatientRepository extends MongoRepository<Patient, String> {
 
     @Query("{ 'active' : true }")
     Page<Patient> findAllActive(Pageable page);
+
+    @Query("{ 'active' : false }")
+    Page<Patient> findAllInactive(Pageable page);
 }

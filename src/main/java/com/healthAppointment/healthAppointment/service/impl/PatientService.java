@@ -1,10 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
-import com.healthAppointment.healthAppointment.model.Address;
-import com.healthAppointment.healthAppointment.model.Contacts;
 import com.healthAppointment.healthAppointment.model.Patient;
-import com.healthAppointment.healthAppointment.model.dto.AddressDTO;
-import com.healthAppointment.healthAppointment.model.dto.ContactsDTO;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.repository.PatientRepository;
 import com.healthAppointment.healthAppointment.service.IPatientService;
@@ -37,11 +33,32 @@ public class PatientService implements IPatientService {
         return buildPatientDTO(responseOp.get());
     }
 
-    public Page<PatientDTO> findAll(Pageable page) {
+    public Page<PatientDTO> findAllActive(Pageable page) {
 
         Page<Patient> response = repository.findAllActive(page);
         return buildPatientDTOList(response);
 
+    }
+
+    @Override
+    public Page<PatientDTO> findAllInactive(Pageable page) {
+        Page<Patient> response = repository.findAllInactive(page);
+        return buildPatientDTOList(response);
+    }
+
+    @Override
+    public Page<PatientDTO> findAll(Pageable page) {
+        Page<Patient> response = repository.findAll(page);
+        return buildPatientDTOList(response);
+    }
+
+    @Override
+    public PatientDTO findById(String id) throws Exception {
+        Optional<Patient> responseOp = repository.findById(id);
+        if(responseOp.isEmpty()) {
+            throw new Exception("Paciente não encontrado");
+        }
+        return buildPatientDTO(responseOp.get());
     }
 
     private Page<PatientDTO> buildPatientDTOList(Page<Patient> response) {
@@ -54,13 +71,5 @@ public class PatientService implements IPatientService {
 
     private Patient buildPatient(PatientDTO request) {
         return modelMapper.map(request, Patient.class);
-    }
-
-    private Address buildAddress(AddressDTO addressDTO) {
-        return modelMapper.map(addressDTO, Address.class);
-    }
-
-    private Contacts buildContacts(ContactsDTO contactsDTO) {
-        return modelMapper.map(contactsDTO, Contacts.class);
     }
 }

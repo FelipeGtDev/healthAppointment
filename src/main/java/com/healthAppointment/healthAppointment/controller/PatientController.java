@@ -29,10 +29,35 @@ public class PatientController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/active")
+    public ResponseEntity<Page<?>> findAllActive(@PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
+        Page<PatientDTO> response = service.findAllActive(page);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<Page<?>> findAllInactive(@PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
+        Page<PatientDTO> response = service.findAllInactive(page);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+@GetMapping
     public ResponseEntity<Page<?>> findAll(@PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
         Page<PatientDTO> response = service.findAll(page);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+        try {
+             PatientDTO response = service.findById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
     }
 
 }
