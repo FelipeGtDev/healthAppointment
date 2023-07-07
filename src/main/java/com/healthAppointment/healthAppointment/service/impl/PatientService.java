@@ -14,15 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PatientService implements IPatientService {
 
 
-    private PatientRepository repository;
-    private ModelMapper modelMapper;
+    private final PatientRepository repository;
+    private final ModelMapper modelMapper;
 
     @Autowired
     private PatientService(PatientRepository repository, ModelMapper modelMapper) {
@@ -35,12 +34,7 @@ public class PatientService implements IPatientService {
         Patient patient = buildPatient(request);
         Optional<Patient> responseOp = Optional.of(repository.save(patient));
 
-        if (responseOp.isPresent()) {
-            return buildPatientDTO(responseOp.get());
-        } else {
-            throw new RuntimeException("Patient not saved");
-        }
-
+        return buildPatientDTO(responseOp.get());
     }
 
     public Page<PatientDTO> findAll(Pageable page) {
@@ -51,7 +45,7 @@ public class PatientService implements IPatientService {
     }
 
     private Page<PatientDTO> buildPatientDTOList(Page<Patient> response) {
-            return response.map(this::buildPatientDTO);
+        return response.map(this::buildPatientDTO);
     }
 
     private PatientDTO buildPatientDTO(Patient patient) {
@@ -67,6 +61,6 @@ public class PatientService implements IPatientService {
     }
 
     private Contacts buildContacts(ContactsDTO contactsDTO) {
-    return modelMapper.map(contactsDTO, Contacts.class);
+        return modelMapper.map(contactsDTO, Contacts.class);
     }
 }

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -26,12 +25,6 @@ public abstract class Person {
     private Date birthDate;
     private Boolean active = true;
     private LocalDateTime createdAt = LocalDateTime.now();
-
-
-
-    public void setBirthDate(String birthDate) throws ParseException {
-        this.birthDate = dateFormat.parse(birthDate);
-    }
 
     public Person(String name, Address address, Contacts contacts, String birthDate, Boolean active, LocalDateTime createdAt) throws ParseException {
         this.name = name;

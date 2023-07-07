@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Getter
 @Setter
@@ -24,7 +23,7 @@ public abstract class PersonDTO {
     private ContactsDTO contacts;
     private String birthDate;
 
-    public void PatientDTO(String name, AddressDTO address, ContactsDTO contacts, String birthDate) throws ParseException {
+    public void PatientDTO(String name, AddressDTO address, ContactsDTO contacts, String birthDate) {
         this.name = name;
         this.address = address;
         this.contacts = contacts;

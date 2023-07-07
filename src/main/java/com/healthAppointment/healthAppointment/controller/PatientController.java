@@ -11,13 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
 
-    private IPatientService service;
+    private final IPatientService service;
 
     @Autowired
     PatientController(IPatientService service) {
