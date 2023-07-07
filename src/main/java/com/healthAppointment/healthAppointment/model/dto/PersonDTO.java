@@ -1,12 +1,12 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 @Getter
@@ -14,20 +14,22 @@ import java.text.SimpleDateFormat;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class PersonDTO {
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private static SimpleDateFormat dateFormatBR = new SimpleDateFormat("dd/MM/yyyy");
+    private static SimpleDateFormat dateFormatUS = new SimpleDateFormat("yyyy-MM-dd");
 
-    private String name;
+    private HumanNameDTO name;
     private AddressDTO address;
     private ContactsDTO contacts;
     private String birthDate;
 
-    public void PatientDTO(String name, AddressDTO address, ContactsDTO contacts, String birthDate) {
+    public void PatientDTO(HumanNameDTO name, AddressDTO address, ContactsDTO contacts, String birthDate) {
         this.name = name;
         this.address = address;
         this.contacts = contacts;
-        this.birthDate  = birthDate;
+        this.birthDate = birthDate;
     }
 
     @Override

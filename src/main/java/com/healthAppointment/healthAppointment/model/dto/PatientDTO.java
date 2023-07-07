@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,19 +12,20 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PatientDTO extends PersonDTO{
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class PatientDTO extends PersonDTO {
 
 
     private String id;
     private String cpf;
 
-     public PatientDTO(String id, String name, AddressDTO address, ContactsDTO contacts, String birthDate, String cpf) {
+    public PatientDTO(String id, HumanNameDTO name, AddressDTO address, ContactsDTO contacts, String birthDate, String cpf) {
         super(name, address, contacts, birthDate);
         this.id = id;
         this.cpf = cpf;
     }
-    public PatientDTO(String name, AddressDTO address, ContactsDTO contacts, String birthDate, String cpf) {
+
+    public PatientDTO(HumanNameDTO name, AddressDTO address, ContactsDTO contacts, String birthDate, String cpf) {
         super(name, address, contacts, birthDate);
         this.cpf = cpf;
     }

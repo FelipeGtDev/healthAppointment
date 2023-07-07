@@ -1,6 +1,5 @@
 package com.healthAppointment.healthAppointment.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,20 +12,26 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
+
 public abstract class Person {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    private String name;
-    private String socialName;
+    private HumanName name;
     private Address address;
     private Contacts contacts;
     private Date birthDate;
     private Boolean active = true;
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Person(String name, Address address, Contacts contacts, String birthDate, Boolean active, LocalDateTime createdAt) throws ParseException {
+
+
+    public void setBirthDate(String birthDate) throws ParseException {
+        this.birthDate = dateFormat.parse(birthDate);
+    }
+
+    public Person(HumanName name, Address address, Contacts contacts, String birthDate, Boolean active, LocalDateTime createdAt) throws ParseException {
         this.name = name;
         this.address = address;
         this.contacts = contacts;
