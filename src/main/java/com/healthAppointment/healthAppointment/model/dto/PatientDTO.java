@@ -5,16 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PatientDTO extends PersonDTO {
-
 
     private String id;
     private String cpf;

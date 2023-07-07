@@ -11,12 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AddressDTO {
-    private String street;
-    private String number;
-    private String complement;
-    private String district;
-    private String city;
+public class RegulatoryAgencyDTO {
+    private String id;
+    private String name;
     private String state;
-    private String zipCode;
+    private String number;
 }

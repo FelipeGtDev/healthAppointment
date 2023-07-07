@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.SuperBuilder;
 
 import java.text.SimpleDateFormat;
 
@@ -13,7 +12,6 @@ import java.text.SimpleDateFormat;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class PersonDTO {
 
