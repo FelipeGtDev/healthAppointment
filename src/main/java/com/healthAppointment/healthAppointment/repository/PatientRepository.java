@@ -19,4 +19,6 @@ public interface PatientRepository extends MongoRepository<Patient, String> {
 
     @Query("{'name.name': {$regex: ?0, $options: 'i'}}")
     Page<Patient> findByName(String name, Pageable page);
+
+
 }

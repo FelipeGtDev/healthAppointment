@@ -78,6 +78,15 @@ public class PatientService implements IPatientService {
         return buildPatientDTO(patient);
     }
 
+    @Override
+    public void delete(String id) {
+        Optional<Patient> responseOp = repository.findById(id);
+        if(responseOp.isEmpty()) {
+            throw new RuntimeException("Paciente não encontrado");
+        }
+        repository.delete(responseOp.get());
+    }
+
     private Page<PatientDTO> buildPatientDTOList(Page<Patient> response) {
         return response.map(this::buildPatientDTO);
     }

@@ -19,4 +19,6 @@ public interface IPatientService {
     Page<PatientDTO> findByName(String name, Pageable page);
 
     PatientDTO update(String id, PatientDTO request);
+
+    void delete(String id);
 }
