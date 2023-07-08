@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import java.text.SimpleDateFormat;
 public abstract class PersonDTO {
 
     private static SimpleDateFormat dateFormatBR = new SimpleDateFormat("dd/MM/yyyy");
-    private static SimpleDateFormat dateFormatUS = new SimpleDateFormat("yyyy-MM-dd");
+//    private static SimpleDateFormat dateFormatUS = new SimpleDateFormat("yyyy-MM-dd");
 
     private HumanNameDTO name;
     private AddressDTO address;
@@ -27,6 +28,14 @@ public abstract class PersonDTO {
         this.name = name;
         this.address = address;
         this.contacts = contacts;
+        this.birthDate = birthDate;
+    }
+
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = dateFormatBR.format(birthDate);
+    }
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
