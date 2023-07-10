@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.model;
 
+import com.healthAppointment.healthAppointment.enums.StateAcronym;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class RegulatoryAgency {
     private String id;
     private String name;
-    private String state;
+    private StateAcronym state;
     private String number;
-
 }

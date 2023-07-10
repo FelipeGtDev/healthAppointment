@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.healthAppointment.healthAppointment.enums.StateAcronym;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,6 @@ public class AddressDTO {
     private String complement;
     private String district;
     private String city;
-    private String state;
+    private StateAcronym state;
     private String zipCode;
 }

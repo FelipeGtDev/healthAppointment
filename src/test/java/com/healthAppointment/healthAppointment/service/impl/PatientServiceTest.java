@@ -3,6 +3,7 @@ package com.healthAppointment.healthAppointment.service.impl;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.repository.PatientRepository;
+import com.healthAppointment.healthAppointment.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -60,11 +61,11 @@ class PatientServiceTest {
 
         // Assert
         assertNotNull(response);
-        assertEquals(patient, response);
+
         assertEquals(patient.getId(), response.getId());
-        assertEquals(patient.getBirthDate(), response.getBirthDate());
+        assertEquals(patient.getBirthDate(), DateUtils.dateFormat.parse(response.getBirthDate()));
         assertEquals(patient.getCpf(), response.getCpf());
-        assertEquals(patient.getName(), response.getName());
+        assertEquals(patient.getName().getName(), response.getName().getName());
         assertEquals(patient.getGender(), response.getGender());
 
 

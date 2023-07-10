@@ -1,12 +1,12 @@
 package com.healthAppointment.healthAppointment.model;
 
 import com.healthAppointment.healthAppointment.enums.Gender;
+import com.healthAppointment.healthAppointment.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -17,7 +17,6 @@ import java.util.Date;
 
 public abstract class Person {
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     private HumanName name;
     private Gender gender;
@@ -28,9 +27,8 @@ public abstract class Person {
     private LocalDateTime createdAt = LocalDateTime.now();
 
 
-
     public void setBirthDate(String birthDate) throws ParseException {
-        this.birthDate = dateFormat.parse(birthDate);
+        this.birthDate = DateUtils.dateFormat.parse(birthDate);
     }
 
     public Person(HumanName name, Gender gender, Address address, Contacts contacts, String birthDate, Boolean active, LocalDateTime createdAt) throws ParseException {
@@ -38,7 +36,7 @@ public abstract class Person {
         this.gender = gender;
         this.address = address;
         this.contacts = contacts;
-        this.birthDate = dateFormat.parse(birthDate);
+        this.birthDate = DateUtils.dateFormat.parse(birthDate);
         this.active = active;
         this.createdAt = createdAt;
     }

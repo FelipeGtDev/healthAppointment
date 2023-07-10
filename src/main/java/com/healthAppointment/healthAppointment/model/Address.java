@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.model;
 
 
+import com.healthAppointment.healthAppointment.enums.StateAcronym;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class Address {
     private String complement;
     private String district;
     private String city;
-    private String state;
+    private StateAcronym state;
     private String zipCode;
 
 }
