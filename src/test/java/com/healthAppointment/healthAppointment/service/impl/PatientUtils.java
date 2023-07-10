@@ -43,7 +43,7 @@ public class PatientUtils {
         return patient;
     }
 
-    public PatientDTO createPatientDTO1() throws ParseException {
+    public PatientDTO createPatientDTO1(){
         PatientDTO patientDTO = new PatientDTO();
 
         patientDTO.setId("1");
@@ -58,7 +58,7 @@ public class PatientUtils {
         return patientDTO;
     }
 
-    public PatientDTO createPatientDTO2() throws ParseException {
+    public PatientDTO createPatientDTO2(){
         PatientDTO patientDTO = new PatientDTO();
 
         patientDTO.setId("2");

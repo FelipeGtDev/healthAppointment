@@ -28,7 +28,7 @@ class PatientServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
-    private PatientUtils patientUtils;
+    private final PatientUtils patientUtils;
 
     @InjectMocks
     private PatientService patientService;
