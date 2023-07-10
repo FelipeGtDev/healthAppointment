@@ -15,7 +15,7 @@ import java.util.List;
 @Document(collection = "pratictioner")
 public class Pratictioner extends Person {
     private String id;
-    private RegulatoryAgency council;
+    private RegulatoryAgency regulatoryAgency;
     private List<Speciality> specialties;
 
 }

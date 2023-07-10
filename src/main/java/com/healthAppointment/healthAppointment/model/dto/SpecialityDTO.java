@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @SuperBuilder
 @Document(collection = "speciality")
 public class SpecialityDTO {
-    private String id;
+//    private String id;
     private String name;
     private String code;
     private String description;
