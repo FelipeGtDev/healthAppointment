@@ -1,7 +1,7 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.healthAppointment.healthAppointment.enums.StateAcronym;
+import com.healthAppointment.healthAppointment.model.enums.StateAcronym;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

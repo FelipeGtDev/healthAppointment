@@ -1,7 +1,7 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
-import com.healthAppointment.healthAppointment.enums.Gender;
-import com.healthAppointment.healthAppointment.enums.StateAcronym;
+import com.healthAppointment.healthAppointment.model.enums.Gender;
+import com.healthAppointment.healthAppointment.model.enums.StateAcronym;
 import com.healthAppointment.healthAppointment.model.*;
 import com.healthAppointment.healthAppointment.model.dto.*;
 

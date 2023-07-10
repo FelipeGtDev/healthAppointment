@@ -1,7 +1,7 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.healthAppointment.healthAppointment.enums.Gender;
+import com.healthAppointment.healthAppointment.model.enums.Gender;
 import com.healthAppointment.healthAppointment.utils.DateUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

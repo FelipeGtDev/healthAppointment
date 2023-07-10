@@ -1,6 +1,6 @@
 package com.healthAppointment.healthAppointment.model;
 
-import com.healthAppointment.healthAppointment.enums.Gender;
+import com.healthAppointment.healthAppointment.model.enums.Gender;
 import com.healthAppointment.healthAppointment.utils.DateUtils;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
