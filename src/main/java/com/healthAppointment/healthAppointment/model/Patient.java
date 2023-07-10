@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.model;
 
 
+import com.healthAppointment.healthAppointment.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,14 +24,14 @@ public class Patient extends Person {
     private String id;
     private String cpf;
 
-    public Patient(String id, HumanName name, Address address, Contacts contacts, String birthDate, String cpf, LocalDateTime createdAt, Boolean active) throws ParseException {
-        super(name, address, contacts, birthDate, active, createdAt);
+    public Patient(String id, HumanName name, Gender gender, Address address, Contacts contacts, String birthDate, String cpf, LocalDateTime createdAt, Boolean active) throws ParseException {
+        super(name, gender, address, contacts, birthDate, active, createdAt);
         this.id = id;
         this.cpf = cpf;
     }
 
-    public Patient(HumanName name, Address address, Contacts contacts, String birthDate, String cpf, LocalDateTime createdAt, Boolean active) throws ParseException {
-        super(name, address, contacts, birthDate, active, createdAt);
+    public Patient(HumanName name, Gender gender, Address address, Contacts contacts, String birthDate, String cpf, LocalDateTime createdAt, Boolean active) throws ParseException {
+        super(name, gender, address, contacts, birthDate, active, createdAt);
         this.cpf = cpf;
     }
 }

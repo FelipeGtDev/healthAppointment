@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.model;
 
+import com.healthAppointment.healthAppointment.enums.Gender;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public abstract class Person {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     private HumanName name;
+    private Gender gender;
     private Address address;
     private Contacts contacts;
     private Date birthDate;
@@ -31,8 +33,9 @@ public abstract class Person {
         this.birthDate = dateFormat.parse(birthDate);
     }
 
-    public Person(HumanName name, Address address, Contacts contacts, String birthDate, Boolean active, LocalDateTime createdAt) throws ParseException {
+    public Person(HumanName name, Gender gender, Address address, Contacts contacts, String birthDate, Boolean active, LocalDateTime createdAt) throws ParseException {
         this.name = name;
+        this.gender = gender;
         this.address = address;
         this.contacts = contacts;
         this.birthDate = dateFormat.parse(birthDate);

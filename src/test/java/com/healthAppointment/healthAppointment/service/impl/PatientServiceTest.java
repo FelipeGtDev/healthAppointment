@@ -60,11 +60,12 @@ class PatientServiceTest {
 
         // Assert
         assertNotNull(response);
-        assertEquals(patientDTO, response);
-        assertEquals(patientDTO.getId(), response.getId());
-        assertEquals(patientDTO.getBirthDate(), response.getBirthDate());
-        assertEquals(patientDTO.getCpf(), response.getCpf());
-        assertEquals(patientDTO.getName(), response.getName());
+        assertEquals(patient, response);
+        assertEquals(patient.getId(), response.getId());
+        assertEquals(patient.getBirthDate(), response.getBirthDate());
+        assertEquals(patient.getCpf(), response.getCpf());
+        assertEquals(patient.getName(), response.getName());
+        assertEquals(patient.getGender(), response.getGender());
 
 
         verify(repository, times(1)).save(patient);

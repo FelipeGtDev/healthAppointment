@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
+import com.healthAppointment.healthAppointment.enums.Gender;
 import com.healthAppointment.healthAppointment.model.*;
 import com.healthAppointment.healthAppointment.model.dto.*;
 
@@ -14,6 +15,7 @@ public class PatientUtils {
         Patient patient = new Patient();
         patient.setId("1");
         patient.setName(new HumanName(null, "John Doe", null));
+        patient.setGender(Gender.MALE);
         patient.setAddress(new Address("Rua 1", "123", "apt 201", "Bairro 1", "Cidade 1", "Estado 1", "12345678"));
         patient.setContacts(new Contacts("qwe@email.com", new ArrayList<>(Arrays.asList(
                 new Phone("21", "12345678901", true),
@@ -31,6 +33,7 @@ public class PatientUtils {
 
         patient.setId("2");
         patient.setName(new HumanName(null, "Jane Armless", new HumanName("Sr.", "Simão Armless",null)));
+        patient.setGender(Gender.OTHER);
         patient.setAddress(new Address("Rua 2", "123", "apt 201", "Bairro 1", "Cidade 1", "Estado 1", "12345678"));
         patient.setContacts(new Contacts("qwe@email.com", new ArrayList<>(Arrays.asList(
                 new Phone("32", "12345678901", true),
@@ -48,6 +51,7 @@ public class PatientUtils {
 
         patientDTO.setId("1");
         patientDTO.setName(new HumanNameDTO(null, "John Doe", null));
+        patientDTO.setGender(Gender.MALE);
         patientDTO.setAddress(new AddressDTO("Rua 1", "123", "apt 201", "Bairro 1", "Cidade 1", "Estado 1", "12345678"));
         patientDTO.setContacts(new ContactsDTO("qwe@email.com", new ArrayList<>(Arrays.asList(
                 new PhoneDTO("21", "12345678901", true),
@@ -63,6 +67,7 @@ public class PatientUtils {
 
         patientDTO.setId("2");
         patientDTO.setName(new HumanNameDTO(null, "Jane Armless", new HumanNameDTO("Sr.", "Simão Armless",null)));
+        patientDTO.setGender(Gender.OTHER);
         patientDTO.setAddress(new AddressDTO("Rua 2", "123", "apt 201", "Bairro 1", "Cidade 1", "Estado 1", "12345678"));
         patientDTO.setContacts(new ContactsDTO("qwe@email.com", new ArrayList<>(Arrays.asList(
                 new PhoneDTO("32", "12345678901", true),

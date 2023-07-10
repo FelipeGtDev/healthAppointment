@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.healthAppointment.healthAppointment.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,14 @@ public abstract class PersonDTO {
 //    private static SimpleDateFormat dateFormatUS = new SimpleDateFormat("yyyy-MM-dd");
 
     private HumanNameDTO name;
+    private Gender gender;
     private AddressDTO address;
     private ContactsDTO contacts;
     private String birthDate;
 
-    public void PatientDTO(HumanNameDTO name, AddressDTO address, ContactsDTO contacts, String birthDate) {
+    public void PatientDTO(HumanNameDTO name, Gender gender,AddressDTO address, ContactsDTO contacts, String birthDate) {
         this.name = name;
+        this.gender = gender;
         this.address = address;
         this.contacts = contacts;
         this.birthDate = birthDate;
@@ -35,6 +38,7 @@ public abstract class PersonDTO {
     public void setBirthDate(Date birthDate) {
         this.birthDate = dateFormatBR.format(birthDate);
     }
+
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
@@ -43,6 +47,7 @@ public abstract class PersonDTO {
     public String toString() {
         return "PersonDTO{" +
                 "name='" + name + '\'' +
+                "gender='" + gender + '\'' +
                 ", address=" + address +
                 ", contacts=" + contacts +
                 ", birthDate=" + birthDate +
