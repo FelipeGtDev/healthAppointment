@@ -39,4 +39,61 @@ public class PratictionerController {
         Page<PratictionerDTO> response = service.findAllActive(page);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<Page<?>> findAllInactive(@PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
+        Page<PratictionerDTO> response = service.findAllInactive(page);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<?>> findAll(@PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
+        Page<PratictionerDTO> response = service.findAll(page);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+        try {
+            PratictionerDTO response = service.findById(id);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao buscar Profissional: " + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
+        }
+    }
+
+    @GetMapping("/listByName")
+    public ResponseEntity<Page<?>> findByname(
+            @RequestParam("name") String name,
+            @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page){
+        Page<PratictionerDTO> response = service.findByName(name, page);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody PratictionerDTO request) {
+        try {
+            PratictionerDTO response = service.update(id, request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao atualizar Profissional: " + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        try {
+            service.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao deletar Profissional: " + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
+        }
+    }
+
 }

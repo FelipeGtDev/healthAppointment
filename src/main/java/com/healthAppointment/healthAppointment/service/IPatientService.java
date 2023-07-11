@@ -18,7 +18,7 @@ public interface IPatientService {
 
     Page<PatientDTO> findByName(String name, Pageable page);
 
-    PatientDTO update(String id, PatientDTO request);
+    PatientDTO update(String id, PatientDTO request) throws Exception;
 
-    void delete(String id);
+    void delete(String id) throws Exception;
 }

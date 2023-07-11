@@ -13,9 +13,12 @@ public interface PratictionerRepository extends MongoRepository<Pratictioner, St
     @Query("{ 'active' : true }")
     Page<Pratictioner> findAllActive(Pageable page);
 
-        @Query("{ 'active' : false }")
+    @Query("{ 'active' : false }")
     Page<Pratictioner> findAllInactive(Pageable page);
 
-    @Query("{'name.name': {$regex: ?0, $options: 'i'}}")
+    @Query("{ $or: [ " +
+            "{'name.name': {$regex: ?0, $options: 'i'} }, " +
+            "{'name.socialName.name': {$regex: ?0, $options: 'i'} } " +
+            "] }")
     Page<Pratictioner> findByName(String name, Pageable page);
 }

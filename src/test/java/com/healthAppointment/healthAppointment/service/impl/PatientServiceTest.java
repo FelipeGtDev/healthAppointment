@@ -199,7 +199,7 @@ class PatientServiceTest {
     }
 
     @Test
-    void update_shouldReturnUpdatedPatientDTO() {
+    void update_shouldReturnUpdatedPatientDTO() throws Exception {
         // Arrange
         String id = "1";
         PatientDTO request = new PatientDTO();
@@ -236,7 +236,7 @@ class PatientServiceTest {
     }
 
     @Test
-    void delete_shouldDeletePatient() {
+    void delete_shouldDeletePatient() throws Exception {
         // Arrange
         String id = "1";
         Patient patient = new Patient();

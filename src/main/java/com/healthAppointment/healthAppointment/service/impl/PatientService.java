@@ -66,10 +66,10 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PatientDTO update(String id, PatientDTO request) {
+    public PatientDTO update(String id, PatientDTO request) throws Exception {
         Optional<Patient> responseOp = repository.findById(id);
         if(responseOp.isEmpty()) {
-            throw new RuntimeException("Paciente não encontrado");
+            throw new Exception("Paciente não encontrado");
         }
         Patient patient = buildPatient(request);
         repository.save(patient);
@@ -77,10 +77,10 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(String id) throws Exception {
         Optional<Patient> responseOp = repository.findById(id);
         if(responseOp.isEmpty()) {
-            throw new RuntimeException("Paciente não encontrado");
+            throw new Exception("Paciente não encontrado");
         }
         repository.delete(responseOp.get());
     }

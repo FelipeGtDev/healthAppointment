@@ -45,6 +45,54 @@ public class PratictionerService implements IPratictionerService {
         return buildPratictionerDTOList(response);
     }
 
+    @Override
+    public Page<PratictionerDTO> findAllInactive(Pageable page) {
+        Page<Pratictioner> response = repository.findAllInactive(page);
+        return buildPratictionerDTOList(response);
+    }
+
+    @Override
+    public Page<PratictionerDTO> findAll(Pageable page) {
+        Page<Pratictioner> response = repository.findAll(page);
+        return buildPratictionerDTOList(response);
+    }
+
+    @Override
+    public PratictionerDTO findById(String id) throws Exception {
+        Optional<Pratictioner> responseOp = repository.findById(id);
+        if(responseOp.isEmpty()) {
+            throw new Exception("Profissional não encontrado");
+        }
+        return buildPratictionerDTO(responseOp.get());
+    }
+
+    @Override
+    public Page<PratictionerDTO> findByName(String name, Pageable page) {
+        Page<Pratictioner> response = repository.findByName(name, page);
+        return buildPratictionerDTOList(response);
+    }
+
+    @Override
+    public PratictionerDTO update(String id, PratictionerDTO request) throws Exception {
+        Optional<Pratictioner> responseOp = repository.findById(id);
+        if(responseOp.isEmpty()) {
+            throw new Exception("Profissional não encontrado");
+        }
+        Pratictioner pratictioner = buildPratictioner(request);
+        repository.save(pratictioner);
+        return buildPratictionerDTO(pratictioner);
+    }
+
+    @Override
+    public void delete(String id) throws Exception {
+        Optional<Pratictioner> responseOp = repository.findById(id);
+        if(responseOp.isEmpty()) {
+            throw new Exception("Profissional não encontrado");
+        }
+        repository.delete(responseOp.get());
+    }
+
+
     private Page<PratictionerDTO> buildPratictionerDTOList(Page<Pratictioner> response) {
         return response.map(this::buildPratictionerDTO);
     }
