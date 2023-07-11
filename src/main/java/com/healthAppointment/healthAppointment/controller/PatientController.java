@@ -24,9 +24,15 @@ public class PatientController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody PatientDTO request) {
-        PatientDTO response = service.save(request);
+        try {
+            PatientDTO response = service.save(request);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao salvar Paciente" + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }
     }
 
     @GetMapping("/active")

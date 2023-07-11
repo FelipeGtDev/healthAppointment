@@ -9,7 +9,8 @@ import com.healthAppointment.healthAppointment.model.mockObjects.MockObjects;
 import com.healthAppointment.healthAppointment.repository.PratictionerRepository;
 import com.healthAppointment.healthAppointment.service.IPratictionerService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +24,6 @@ public class PratictionerService implements IPratictionerService {
     private final PratictionerRepository repository;
     private final ModelMapper modelMapper;
 
-    @Autowired
     private PratictionerService(PratictionerRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
@@ -37,6 +37,16 @@ public class PratictionerService implements IPratictionerService {
         Optional<Pratictioner> responseOp = Optional.of(repository.save(pratictioner));
 
         return buildPratictionerDTO(responseOp.get());
+    }
+
+    @Override
+    public Page<PratictionerDTO> findAllActive(Pageable page) {
+        Page<Pratictioner> response = repository.findAllActive(page);
+        return buildPratictionerDTOList(response);
+    }
+
+    private Page<PratictionerDTO> buildPratictionerDTOList(Page<Pratictioner> response) {
+        return response.map(this::buildPratictionerDTO);
     }
 
     // TODO Método mocado. Remover quando implementar o RegulatoryAgencyService

@@ -5,7 +5,6 @@ import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.repository.PatientRepository;
 import com.healthAppointment.healthAppointment.service.IPatientService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ public class PatientService implements IPatientService {
     private final PatientRepository repository;
     private final ModelMapper modelMapper;
 
-    @Autowired
     private PatientService(PatientRepository repository, ModelMapper modelMapper) {
         this.repository = repository;
         this.modelMapper = modelMapper;
