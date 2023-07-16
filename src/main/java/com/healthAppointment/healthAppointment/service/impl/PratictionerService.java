@@ -1,19 +1,19 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
 import com.healthAppointment.healthAppointment.model.Pratictioner;
+import com.healthAppointment.healthAppointment.model.Qualification;
 import com.healthAppointment.healthAppointment.model.RegulatoryAgency;
-import com.healthAppointment.healthAppointment.model.Speciality;
 import com.healthAppointment.healthAppointment.model.dto.PratictionerDTO;
-import com.healthAppointment.healthAppointment.model.dto.SpecialityDTO;
+import com.healthAppointment.healthAppointment.model.dto.QualificationDTO;
 import com.healthAppointment.healthAppointment.model.mockObjects.MockObjects;
 import com.healthAppointment.healthAppointment.repository.PratictionerRepository;
 import com.healthAppointment.healthAppointment.service.IPratictionerService;
+import com.healthAppointment.healthAppointment.service.IQualificationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,18 +22,26 @@ import java.util.Optional;
 public class PratictionerService implements IPratictionerService {
 
     private final PratictionerRepository repository;
+    private final IQualificationService qualificationService;
     private final ModelMapper modelMapper;
 
-    private PratictionerService(PratictionerRepository repository, ModelMapper modelMapper) {
+    private PratictionerService(PratictionerRepository repository, QualificationService qualificationService, ModelMapper modelMapper) {
         this.repository = repository;
+        this.qualificationService = qualificationService;
         this.modelMapper = modelMapper;
     }
 
 
     public PratictionerDTO save(PratictionerDTO request) {
         Pratictioner pratictioner = buildPratictioner(request);
-        pratictioner.setRegulatoryAgency(findRegulatoryAgency(request.getRegulatoryAgency().getId()));
-        pratictioner.setSpecialties(findSpecialties(request.getSpecialties()));
+
+        if (request.getRegulatoryAgency() != null) {
+            pratictioner.setRegulatoryAgency(findRegulatoryAgency(request.getRegulatoryAgency().getId()));
+        }
+
+        if (request.getQualifications() != null) {
+            pratictioner.setQualifications(findQualifications(request.getQualifications()));
+        }
         Optional<Pratictioner> responseOp = Optional.of(repository.save(pratictioner));
 
         return buildPratictionerDTO(responseOp.get());
@@ -60,7 +68,7 @@ public class PratictionerService implements IPratictionerService {
     @Override
     public PratictionerDTO findById(String id) throws Exception {
         Optional<Pratictioner> responseOp = repository.findById(id);
-        if(responseOp.isEmpty()) {
+        if (responseOp.isEmpty()) {
             throw new Exception("Profissional não encontrado");
         }
         return buildPratictionerDTO(responseOp.get());
@@ -75,7 +83,7 @@ public class PratictionerService implements IPratictionerService {
     @Override
     public PratictionerDTO update(String id, PratictionerDTO request) throws Exception {
         Optional<Pratictioner> responseOp = repository.findById(id);
-        if(responseOp.isEmpty()) {
+        if (responseOp.isEmpty()) {
             throw new Exception("Profissional não encontrado");
         }
         Pratictioner pratictioner = buildPratictioner(request);
@@ -86,7 +94,7 @@ public class PratictionerService implements IPratictionerService {
     @Override
     public void delete(String id) throws Exception {
         Optional<Pratictioner> responseOp = repository.findById(id);
-        if(responseOp.isEmpty()) {
+        if (responseOp.isEmpty()) {
             throw new Exception("Profissional não encontrado");
         }
         repository.delete(responseOp.get());
@@ -97,14 +105,10 @@ public class PratictionerService implements IPratictionerService {
         return response.map(this::buildPratictionerDTO);
     }
 
-    // TODO Método mocado. Remover quando implementar o RegulatoryAgencyService
-    private List<Speciality> findSpecialties(List<SpecialityDTO> specialties) {
-        List<Speciality> list = new ArrayList<>();
-        MockObjects mockObjects = new MockObjects();
-        for (SpecialityDTO speciality : specialties) {
-            list.add(mockObjects.getSpeciality(speciality.getCode()));
-        }
-        return list;
+    private List<Qualification> findQualifications(List<QualificationDTO> qualifications) {
+        List<String> codeList = qualificationService.getCodeListFromTypes(qualifications);
+
+        return qualificationService.findByCodes(codeList);
     }
 
     // TODO Método mocado. Remover quando implementar o RegulatoryAgencyService

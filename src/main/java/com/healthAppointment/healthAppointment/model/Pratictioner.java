@@ -16,6 +16,6 @@ import java.util.List;
 public class Pratictioner extends Person {
     private String id;
     private RegulatoryAgency regulatoryAgency;
-    private List<Speciality> specialties;
+    private List<Qualification> qualifications;
 
 }

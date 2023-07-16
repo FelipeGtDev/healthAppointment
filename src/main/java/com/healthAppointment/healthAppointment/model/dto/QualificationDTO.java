@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.List;
 
 @Getter
@@ -13,8 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PratictionerDTO extends PersonDTO {
-    private String id;
-    private RegulatoryAgencyDTO regulatoryAgency;
-    private List<QualificationDTO> qualifications;
+public class QualificationDTO {
+//    private String id;
+    private String name;
+    private String code;
+    private String description;
+    private List<QualificationDTO> types;
+
+    public QualificationDTO(String code){
+        this.code = code;
+    }
 }
