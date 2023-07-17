@@ -5,10 +5,10 @@ import com.healthAppointment.healthAppointment.model.Qualification;
 import com.healthAppointment.healthAppointment.model.RegulatoryAgency;
 import com.healthAppointment.healthAppointment.model.dto.PratictionerDTO;
 import com.healthAppointment.healthAppointment.model.dto.QualificationDTO;
-import com.healthAppointment.healthAppointment.model.mockObjects.MockObjects;
 import com.healthAppointment.healthAppointment.repository.PratictionerRepository;
 import com.healthAppointment.healthAppointment.service.IPratictionerService;
 import com.healthAppointment.healthAppointment.service.IQualificationService;
+import com.healthAppointment.healthAppointment.service.IRegulatoryAgencyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +23,13 @@ public class PratictionerService implements IPratictionerService {
 
     private final PratictionerRepository repository;
     private final IQualificationService qualificationService;
+    private final IRegulatoryAgencyService regulatoryAgencyService;
     private final ModelMapper modelMapper;
 
-    private PratictionerService(PratictionerRepository repository, QualificationService qualificationService, ModelMapper modelMapper) {
+    private PratictionerService(PratictionerRepository repository, QualificationService qualificationService, IRegulatoryAgencyService regulatoryAgencyService, ModelMapper modelMapper) {
         this.repository = repository;
         this.qualificationService = qualificationService;
+        this.regulatoryAgencyService = regulatoryAgencyService;
         this.modelMapper = modelMapper;
     }
 
@@ -108,13 +110,15 @@ public class PratictionerService implements IPratictionerService {
     private List<Qualification> findQualifications(List<QualificationDTO> qualifications) {
         List<String> codeList = qualificationService.getCodeListFromTypes(qualifications);
 
-        return qualificationService.findByCodes(codeList);
+        return qualificationService.findByCodeList(codeList);
     }
 
-    // TODO Método mocado. Remover quando implementar o RegulatoryAgencyService
     private RegulatoryAgency findRegulatoryAgency(String id) {
-        MockObjects mockObjects = new MockObjects();
-        return mockObjects.getAgency(id);
+        Optional<RegulatoryAgency> agency = regulatoryAgencyService.findById(id);
+        if (agency.isEmpty()) {
+            throw new RuntimeException(); // TODO Melhorar
+        }
+        return agency.get();
     }
 
     private PratictionerDTO buildPratictionerDTO(Pratictioner pratictioner) {

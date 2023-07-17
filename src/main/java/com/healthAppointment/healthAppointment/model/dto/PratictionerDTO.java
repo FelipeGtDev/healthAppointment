@@ -16,5 +16,6 @@ import java.util.List;
 public class PratictionerDTO extends PersonDTO {
     private String id;
     private RegulatoryAgencyDTO regulatoryAgency;
+    private String registerNumber;
     private List<QualificationDTO> qualifications;
 }

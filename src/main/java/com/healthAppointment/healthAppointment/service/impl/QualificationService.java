@@ -31,7 +31,7 @@ public class QualificationService implements IQualificationService {
 
         if (requestDTO.getTypes() != null) {
             List<String> typeCodes = getCodeListFromTypes(requestDTO.getTypes());
-            types = repository.findByCodes(typeCodes);
+            types = repository.findByCodeList(typeCodes);
             request.setTypes(types);
         }
         var response = repository.save(request);
@@ -49,8 +49,13 @@ public class QualificationService implements IQualificationService {
     }
 
     @Override
-    public List<Qualification> findByCodes(List<String> codes) {
-        return repository.findByCodes(codes);
+    public List<Qualification> findByCodeList(List<String> codes) {
+        return repository.findByCodeList(codes);
+    }
+
+    @Override
+    public Qualification findByCode(String code) {
+        return repository.findByCode(code);
     }
 
     @Override

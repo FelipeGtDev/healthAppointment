@@ -16,5 +16,12 @@ public class RegulatoryAgency {
     private String id;
     private String name;
     private StateAcronym state;
-    private String number;
+    private Qualification qualification;
+
+    public void setQualification(Qualification qualification) {
+        if (qualification.getTypes() != null) {
+            throw new IllegalArgumentException("Qualificação não permitida");
+        }
+        this.qualification = qualification;
+    }
 }

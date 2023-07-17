@@ -11,7 +11,9 @@ public interface IQualificationService {
 
     Qualification addType(String specialityId, String typeId);
 
-    List<Qualification> findByCodes(List<String> codes);
+    List<Qualification> findByCodeList(List<String> codes);
+
+    Qualification findByCode(String code);
 
     List<QualificationReducedDTO> listByType(String typeCode);
 

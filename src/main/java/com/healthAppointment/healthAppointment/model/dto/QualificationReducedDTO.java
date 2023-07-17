@@ -12,5 +12,4 @@ import lombok.Setter;
 public class QualificationReducedDTO {
     private String name;
     private String code;
-    private String description;
 }

@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.healthAppointment.healthAppointment.model.enums.StateAcronym;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,11 @@ import lombok.Setter;
 public class RegulatoryAgencyDTO {
     private String id;
     private String name;
-    private String state;
-    private String number;
+    private StateAcronym state;
+    private QualificationReducedDTO qualification;
+
+    public void setName(String name) {
+        this.name = name.toUpperCase();
+    }
+
 }
