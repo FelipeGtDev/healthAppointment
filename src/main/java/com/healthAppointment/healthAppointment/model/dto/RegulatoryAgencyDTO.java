@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,8 +16,11 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegulatoryAgencyDTO {
     private String id;
+    @NotNull
     private String name;
+    @NotNull
     private StateAcronym state;
+    @NotNull
     private QualificationReducedDTO qualification;
 
     public void setName(String name) {

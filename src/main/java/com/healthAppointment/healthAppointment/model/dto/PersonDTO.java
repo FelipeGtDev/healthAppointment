@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.healthAppointment.healthAppointment.model.enums.Gender;
 import com.healthAppointment.healthAppointment.utils.DateUtils;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
@@ -17,15 +19,17 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class PersonDTO {
 
-
-
+    @NotNull
     private HumanNameDTO name;
+    @NotNull
     private Gender gender;
     private AddressDTO address;
+    @NotNull
     private ContactsDTO contacts;
+    @JsonProperty("birth_date")
     private String birthDate;
 
-    public void PatientDTO(HumanNameDTO name, Gender gender,AddressDTO address, ContactsDTO contacts, String birthDate) {
+    public void PatientDTO(HumanNameDTO name, Gender gender, AddressDTO address, ContactsDTO contacts, String birthDate) {
         this.name = name;
         this.gender = gender;
         this.address = address;
