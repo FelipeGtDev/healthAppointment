@@ -3,6 +3,11 @@
 
 
 spring:
+  application:
+    name: Health Appointment API - Backend
+    version: v1.0.0
+    since: 06/07/2023
+    author: Felipe Lima
   data:
       mongodb:
 #        user: mongo
