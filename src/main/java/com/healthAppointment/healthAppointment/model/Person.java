@@ -28,6 +28,10 @@ public abstract class Person {
 
 
     public void setBirthDate(String birthDate) throws ParseException {
+        if (birthDate == null) {
+            this.birthDate = null;
+            return;
+        }
         this.birthDate = DateUtils.dateFormat.parse(birthDate);
     }
 

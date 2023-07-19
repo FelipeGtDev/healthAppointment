@@ -23,6 +23,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class PatientServiceTest {
+
+    Patient patient1;
+    Patient patient2;
+    PatientDTO patientDTO1;
+    PatientDTO patientDTO2;
+
     @Mock
     private PatientRepository repository;
 
@@ -35,8 +41,14 @@ class PatientServiceTest {
     private PatientService patientService;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ParseException {
+
         MockitoAnnotations.initMocks(this);
+        patient1 = patientUtils.createPatient1();
+        patient2 = patientUtils.createPatient2();
+
+        patientDTO1 = patientUtils.createPatientDTO1();
+        patientDTO2 = patientUtils.createPatientDTO2();
     }
 
 
@@ -47,31 +59,25 @@ class PatientServiceTest {
     @Test
     void save_shouldReturnPatientDTO() throws ParseException {
 
-
         // Arrange
-        PatientDTO patientDTO = patientUtils.createPatientDTO1();
-        Patient patient = patientUtils.createPatient1();
-
-        when(modelMapper.map(patientDTO, Patient.class)).thenReturn(patient);
-        when(repository.save(patient)).thenReturn(patient);
-        when(modelMapper.map(patient, PatientDTO.class)).thenReturn(patientDTO);
+        when(modelMapper.map(patientDTO1, Patient.class)).thenReturn(patient1);
+        when(repository.save(any())).thenReturn(patient1);
+        when(modelMapper.map(patient1, PatientDTO.class)).thenReturn(patientDTO1);
 
         // Act
-        PatientDTO response = patientService.save(patientDTO);
+        PatientDTO response = patientService.save(patientDTO1);
 
         // Assert
         assertNotNull(response);
 
-        assertEquals(patient.getId(), response.getId());
-        assertEquals(patient.getBirthDate(), DateUtils.dateFormat.parse(response.getBirthDate()));
-        assertEquals(patient.getCpf(), response.getCpf());
-        assertEquals(patient.getName().getName(), response.getName().getName());
-        assertEquals(patient.getGender(), response.getGender());
+        assertEquals(patient1.getId(), response.getId());
+        assertEquals(patient1.getBirthDate(), DateUtils.dateFormat.parse(response.getBirthDate()));
+        assertEquals(patient1.getCpf(), response.getCpf());
+        assertEquals(patient1.getName().getName(), response.getName().getName());
+        assertEquals(patient1.getGender(), response.getGender());
 
 
-        verify(repository, times(1)).save(patient);
-
-
+        verify(repository, times(1)).save(patient1);
     }
 
     @Test
@@ -115,11 +121,6 @@ class PatientServiceTest {
     @Test
     void findAll_shouldReturnPatientDTOPage() throws ParseException {
 
-        Patient patient1 = patientUtils.createPatient1();
-        Patient patient2 = patientUtils.createPatient2();
-
-        PatientDTO patientDTO1 = patientUtils.createPatientDTO1();
-        PatientDTO patientDTO2 = patientUtils.createPatientDTO2();
 
         // Arrange
         Pageable pageable = mock(Pageable.class);
@@ -231,7 +232,7 @@ class PatientServiceTest {
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> patientService.update(id, request));
+        assertThrows(Exception.class, () -> patientService.update(id, request));
         verify(repository, times(1)).findById(id);
     }
 
@@ -259,7 +260,7 @@ class PatientServiceTest {
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> patientService.delete(id));
+        assertThrows(Exception.class, () -> patientService.delete(id));
         verify(repository, times(1)).findById(id);
     }
 

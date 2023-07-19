@@ -72,7 +72,7 @@ public class PatientService implements IPatientService {
             throw new Exception("Paciente não encontrado");
         }
         Patient patient = buildPatient(request);
-        repository.save(patient);
+        patient = repository.save(patient);
         return buildPatientDTO(patient);
     }
 

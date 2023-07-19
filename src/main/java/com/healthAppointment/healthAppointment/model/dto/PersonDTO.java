@@ -39,7 +39,12 @@ public abstract class PersonDTO {
 
 
     public void setBirthDate(Date birthDate) {
-        this.birthDate = DateUtils.dateFormat.format(birthDate);
+        if (birthDate == null) {
+            this.birthDate = null;
+            return;
+        }
+        this.birthDate = DateUtils.dateFormat.format(birthDate
+        );
     }
 
     public void setBirthDate(String birthDate) {
