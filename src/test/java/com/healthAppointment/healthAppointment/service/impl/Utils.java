@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class PatientUtils {
+public class Utils {
+
+    // ############################### PATIENT ##########################################
 
     public Patient createPatient1() throws ParseException {
         Patient patient = new Patient();
@@ -77,5 +79,54 @@ public class PatientUtils {
         patientDTO.setCpf("12345678902");
 
         return patientDTO;
+    }
+
+
+    // ############################### PRATICTIOINER ##########################################
+
+    public Pratictioner createPratictioner1() throws ParseException {
+        Pratictioner pratictioner = new Pratictioner();
+
+        pratictioner.setId("1");
+        pratictioner.setName(new HumanName("Dr.", "John Armless", null));
+        pratictioner.setGender(Gender.MALE);
+        pratictioner.setAddress(new Address("Rua 1", "123", "apt 201", "Bairro 1", "Cidade 1", StateAcronym.RJ, "12345678"));
+        pratictioner.setContacts(new Contacts("qwe@email.com", new ArrayList<>(Arrays.asList(
+                new Phone("21", "55555678901", true),
+                new Phone("11", "55555678901", false)))));
+        pratictioner.setBirthDate("02/02/2000");
+        pratictioner.setActive(true);
+        pratictioner.setCreatedAt(LocalDateTime.now().minusYears(1));
+        var qualification = new Qualification("1", "Medicina", "codeMed", null,null);
+        var agency =  new RegulatoryAgency(
+                "1","CRM", StateAcronym.SP,qualification);
+        pratictioner.setRegulatoryAgency(agency);
+        pratictioner.setRegisterNumber("12345678901");
+        pratictioner.setQualifications(new ArrayList<>(Arrays.asList(qualification)));
+
+        return pratictioner;
+    }
+
+    public PratictionerDTO createPratictionerDTO1(){
+        PratictionerDTO pratictionerDTO = new PratictionerDTO();
+
+        pratictionerDTO.setId("1");
+        pratictionerDTO.setName(new HumanNameDTO("Dr.", "John Armless", null));
+        pratictionerDTO.setGender(Gender.MALE);
+        pratictionerDTO.setAddress(new AddressDTO("Rua 1", "123", "apt 201", "Bairro 1", "Cidade 1", StateAcronym.RJ, "12345678"));
+        pratictionerDTO.setContacts(new ContactsDTO("qwe@email.com", new ArrayList<>(Arrays.asList(
+                new PhoneDTO("21", "55555678901", true),
+                new PhoneDTO("11", "55555678901", false)))));
+        pratictionerDTO.setBirthDate("02/02/2000");
+
+        var qualification = new QualificationDTO("Medicina", "codeMed", null,null);
+        var qualificationReduced = new QualificationReducedDTO("Medicina", "codeMed");
+        var agency =  new RegulatoryAgencyDTO(
+                "1","CRM", StateAcronym.SP,qualificationReduced);
+        pratictionerDTO.setRegulatoryAgency(agency);
+        pratictionerDTO.setRegisterNumber("12345678901");
+        pratictionerDTO.setQualifications(new ArrayList<>(Arrays.asList(qualification)));
+
+        return pratictionerDTO;
     }
 }

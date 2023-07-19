@@ -35,7 +35,7 @@ class PatientServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
-    private final PatientUtils patientUtils;
+    private final Utils patientUtils;
 
     @InjectMocks
     private PatientService patientService;
@@ -53,7 +53,7 @@ class PatientServiceTest {
 
 
     public PatientServiceTest() {
-        this.patientUtils = new PatientUtils();
+        this.patientUtils = new Utils();
     }
 
     @Test
