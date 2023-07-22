@@ -24,10 +24,10 @@ import static org.mockito.Mockito.*;
 
 class PatientServiceTest {
 
-    Patient patient1;
-    Patient patient2;
-    PatientDTO patientDTO1;
-    PatientDTO patientDTO2;
+    private Patient patient1;
+    private Patient patient2;
+    private PatientDTO patientDTO1;
+    private PatientDTO patientDTO2;
 
     @Mock
     private PatientRepository repository;
@@ -35,7 +35,7 @@ class PatientServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
-    private final Utils patientUtils;
+    private final Utils utils;
 
     @InjectMocks
     private PatientService patientService;
@@ -44,16 +44,16 @@ class PatientServiceTest {
     void setUp() throws ParseException {
 
         MockitoAnnotations.initMocks(this);
-        patient1 = patientUtils.createPatient1();
-        patient2 = patientUtils.createPatient2();
+        patient1 = utils.createPatient1();
+        patient2 = utils.createPatient2();
 
-        patientDTO1 = patientUtils.createPatientDTO1();
-        patientDTO2 = patientUtils.createPatientDTO2();
+        patientDTO1 = utils.createPatientDTO1();
+        patientDTO2 = utils.createPatientDTO2();
     }
 
 
     public PatientServiceTest() {
-        this.patientUtils = new Utils();
+        this.utils = new Utils();
     }
 
     @Test
