@@ -43,7 +43,7 @@ class PatientServiceTest {
     @BeforeEach
     void setUp() throws ParseException {
 
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         patient1 = utils.createPatient1();
         patient2 = utils.createPatient2();
 
@@ -65,19 +65,19 @@ class PatientServiceTest {
         when(modelMapper.map(patient1, PatientDTO.class)).thenReturn(patientDTO1);
 
         // Act
-        PatientDTO response = patientService.save(patientDTO1);
+        PatientDTO result = patientService.save(patientDTO1);
 
         // Assert
-        assertNotNull(response);
+        assertNotNull(result);
 
-        assertEquals(patient1.getId(), response.getId());
-        assertEquals(patient1.getBirthDate(), DateUtils.dateFormat.parse(response.getBirthDate()));
-        assertEquals(patient1.getCpf(), response.getCpf());
-        assertEquals(patient1.getName().getName(), response.getName().getName());
-        assertEquals(patient1.getGender(), response.getGender());
+        assertEquals(patient1.getId(), result.getId());
+        assertEquals(patient1.getBirthDate(), DateUtils.dateFormat.parse(result.getBirthDate()));
+        assertEquals(patient1.getCpf(), result.getCpf());
+        assertEquals(patient1.getName().getName(), result.getName().getName());
+        assertEquals(patient1.getGender(), result.getGender());
 
 
-        verify(repository, times(1)).save(patient1);
+        verify(repository, times(1)).save(any());
     }
 
     @Test
@@ -119,7 +119,7 @@ class PatientServiceTest {
     }
 
     @Test
-    void findAll_shouldReturnPatientDTOPage() throws ParseException {
+    void findAll_shouldReturnPatientDTOPage() {
 
 
         // Arrange

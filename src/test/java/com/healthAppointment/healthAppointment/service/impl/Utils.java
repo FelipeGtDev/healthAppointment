@@ -1,16 +1,24 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
-import com.healthAppointment.healthAppointment.model.enums.Gender;
-import com.healthAppointment.healthAppointment.model.enums.StateAcronym;
 import com.healthAppointment.healthAppointment.model.*;
 import com.healthAppointment.healthAppointment.model.dto.*;
+import com.healthAppointment.healthAppointment.model.enums.Gender;
+import com.healthAppointment.healthAppointment.model.enums.StateAcronym;
+import org.modelmapper.ModelMapper;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
 public class Utils {
+
+    private final ModelMapper modelMapper;
+
+    public Utils() {
+        this.modelMapper = new ModelMapper();
+    }
 
     // ############################### PATIENT ##########################################
 
@@ -35,7 +43,7 @@ public class Utils {
         Patient patient = new Patient();
 
         patient.setId("2");
-        patient.setName(new HumanName(null, "Jane Armless", new HumanName("Sr.", "Simão Armless",null)));
+        patient.setName(new HumanName(null, "Jane Armless", new HumanName("Sr.", "Simão Armless", null)));
         patient.setGender(Gender.OTHER);
         patient.setAddress(new Address("Rua 2", "123", "apt 201", "Bairro 1", "Cidade 1", StateAcronym.MG, "12345678"));
         patient.setContacts(new Contacts("qwe@email.com", new ArrayList<>(Arrays.asList(
@@ -49,7 +57,7 @@ public class Utils {
         return patient;
     }
 
-    public PatientDTO createPatientDTO1(){
+    public PatientDTO createPatientDTO1() {
         PatientDTO patientDTO = new PatientDTO();
 
         patientDTO.setId("1");
@@ -65,11 +73,11 @@ public class Utils {
         return patientDTO;
     }
 
-    public PatientDTO createPatientDTO2(){
+    public PatientDTO createPatientDTO2() {
         PatientDTO patientDTO = new PatientDTO();
 
         patientDTO.setId("2");
-        patientDTO.setName(new HumanNameDTO(null, "Jane Armless", new HumanNameDTO("Sr.", "Simão Armless",null)));
+        patientDTO.setName(new HumanNameDTO(null, "Jane Armless", new HumanNameDTO("Sr.", "Simão Armless", null)));
         patientDTO.setGender(Gender.OTHER);
         patientDTO.setAddress(new AddressDTO("Rua 2", "123", "apt 201", "Bairro 1", "Cidade 1", StateAcronym.MG, "12345678"));
         patientDTO.setContacts(new ContactsDTO("qwe@email.com", new ArrayList<>(Arrays.asList(
@@ -79,6 +87,11 @@ public class Utils {
         patientDTO.setCpf("12345678902");
 
         return patientDTO;
+    }
+
+    public PatientReducedDTO createPatientReducedDTO(Patient patient) throws ParseException {
+
+        return modelMapper.map(patient, PatientReducedDTO.class);
     }
 
 
@@ -97,9 +110,9 @@ public class Utils {
         pratictioner.setBirthDate("02/02/2000");
         pratictioner.setActive(true);
         pratictioner.setCreatedAt(LocalDateTime.now().minusYears(1));
-        var qualification = new Qualification("1", "Medicina", "codeMed", null,null);
-        var agency =  new RegulatoryAgency(
-                "1","CRM", StateAcronym.SP,qualification);
+        var qualification = new Qualification("1", "Medicina", "codeMed", null, null);
+        var agency = new RegulatoryAgency(
+                "1", "CRM", StateAcronym.SP, qualification);
         pratictioner.setRegulatoryAgency(agency);
         pratictioner.setRegisterNumber("12345678901");
         pratictioner.setQualifications(new ArrayList<>(Arrays.asList(qualification)));
@@ -107,7 +120,7 @@ public class Utils {
         return pratictioner;
     }
 
-    public PratictionerDTO createPratictionerDTO1(){
+    public PratictionerDTO createPratictionerDTO1() {
         PratictionerDTO pratictionerDTO = new PratictionerDTO();
 
         pratictionerDTO.setId("1");
@@ -119,14 +132,84 @@ public class Utils {
                 new PhoneDTO("11", "55555678901", false)))));
         pratictionerDTO.setBirthDate("02/02/2000");
 
-        var qualification = new QualificationDTO("Medicina", "codeMed", null,null);
+        var qualification = new QualificationDTO("Medicina", "codeMed", null, null);
         var qualificationReduced = new QualificationReducedDTO("Medicina", "codeMed");
-        var agency =  new RegulatoryAgencyDTO(
-                "1","CRM", StateAcronym.SP,qualificationReduced);
+        var agency = new RegulatoryAgencyDTO(
+                "1", "CRM", StateAcronym.SP, qualificationReduced);
         pratictionerDTO.setRegulatoryAgency(agency);
         pratictionerDTO.setRegisterNumber("12345678901");
         pratictionerDTO.setQualifications(new ArrayList<>(Arrays.asList(qualification)));
 
         return pratictionerDTO;
+    }
+
+    public PratictionerReducedDTO createPratictionerReducedDTO1() throws ParseException {
+        var pratictioner = createPratictioner1();
+        return modelMapper.map(pratictioner, PratictionerReducedDTO.class);
+    }
+
+    // ########################### HEALTH PROCEDURE ######################################
+    public Qualification createQualificationPhisioterapy() {
+        var Qualification = new Qualification();
+
+        Qualification.setId("1");
+        Qualification.setName("Fisioterapia");
+        Qualification.setCode("codeFisioterapia");
+        Qualification.setDescription("descriptionFisioterapia");
+
+        return Qualification;
+    }
+
+    public Qualification createQualificationPilates() {
+        var qualification = new Qualification();
+
+        qualification.setId("1");
+        qualification.setName("Pilates");
+        qualification.setCode("50000853");
+        qualification.setDescription("descriptionPilates");
+        qualification.setTypes(new ArrayList<>(Arrays.asList(createQualificationPhisioterapy())));
+
+        return qualification;
+    }
+
+    public QualificationReducedDTO createQualificationReducedDTO(Qualification qualification) {
+        return modelMapper.map(qualification, QualificationReducedDTO.class);
+    }
+
+    // ############################### SCHEDULE ##########################################
+
+    public Schedule createScheduleWhithOnePatient() throws ParseException {
+        Schedule schedule = new Schedule();
+
+        schedule.setId("1");
+        schedule.setDateTime(LocalDateTime.parse("2023-12-01T08:00:00"));
+        schedule.setPratictioner(createPratictioner1());
+        schedule.setPatients(new ArrayList<>(Arrays.asList(createPatient1())));
+        schedule.setHealthProcedure(createQualificationPhisioterapy());
+//        scheduleDTO.setAppointments(new ArrayList<>(Arrays.asList()));
+
+        return schedule;
+    }
+
+    public ScheduleDTO createScheduleDtoWhithOnePatient() throws ParseException {
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+
+        scheduleDTO.setId("1");
+        scheduleDTO.setDateTime(LocalDateTime.parse("2023-12-01T08:00:00"));
+        scheduleDTO.setPratictioner(createPratictionerReducedDTO1());
+        scheduleDTO.setPatients(new ArrayList<>(Arrays.asList(createPatientReducedDTO(createPatient1()))));
+        scheduleDTO.setHealthProcedure(createQualificationReducedDTO(createQualificationPhisioterapy()));
+//        scheduleDTO.setAppointments(new ArrayList<>(Arrays.asList()));
+
+        return scheduleDTO;
+    }
+
+    public ScheduleDTO createScheduleDtoWhithMultiplePatients() throws ParseException {
+        var scheduleDTO = createScheduleDtoWhithOnePatient();
+
+        scheduleDTO.setHealthProcedure(createQualificationReducedDTO(createQualificationPilates()));
+        scheduleDTO.getPatients().add(createPatientReducedDTO(createPatient2()));
+
+        return scheduleDTO;
     }
 }

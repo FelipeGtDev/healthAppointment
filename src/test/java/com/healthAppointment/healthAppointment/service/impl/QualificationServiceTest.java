@@ -1,37 +1,37 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.healthAppointment.healthAppointment.model.Qualification;
+import com.healthAppointment.healthAppointment.model.dto.QualificationDTO;
+import com.healthAppointment.healthAppointment.repository.QualificationRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.healthAppointment.healthAppointment.model.Qualification;
-import com.healthAppointment.healthAppointment.model.dto.QualificationDTO;
-import com.healthAppointment.healthAppointment.model.dto.QualificationReducedDTO;
-import com.healthAppointment.healthAppointment.repository.QualificationRepository;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 class QualificationServiceTest {
 
-    private QualificationService qualificationService;
-    private QualificationRepository qualificationRepository;
+    @Mock
+    private QualificationService service;
+    @Mock
+    private QualificationRepository repository;
     private ModelMapper modelMapper;
 
     @BeforeEach
     public void setup() {
         // Configurar objetos mock para o repositório e o modelMapper
-        qualificationRepository = mock(QualificationRepository.class);
+        repository = mock(QualificationRepository.class);
         modelMapper = mock(ModelMapper.class);
 
-        qualificationService = new QualificationService(qualificationRepository, modelMapper);
+        service = new QualificationService(repository, modelMapper);
     }
 
     @Test
@@ -51,11 +51,11 @@ class QualificationServiceTest {
 
         // Configurar comportamento do mock
         when(modelMapper.map(requestDTO, Qualification.class)).thenReturn(requestEntity);
-        when(qualificationRepository.save(any(Qualification.class))).thenReturn(savedEntity);
+        when(repository.save(any(Qualification.class))).thenReturn(savedEntity);
         when(modelMapper.map(savedEntity, QualificationDTO.class)).thenReturn(requestDTO);
 
         // Executar o método e verificar o resultado
-        QualificationDTO resultDTO = qualificationService.save(requestDTO);
+        QualificationDTO resultDTO = service.save(requestDTO); //TODO verificar - nunca usado
         // Adicione aqui asserções para verificar se o resultado está correto
     }
 
@@ -72,12 +72,12 @@ class QualificationServiceTest {
         type.setId(typeId);
 
         // Configurar comportamento do mock
-        when(qualificationRepository.findById(qualificationId)).thenReturn(Optional.of(qualification));
-        when(qualificationRepository.findById(typeId)).thenReturn(Optional.of(type));
-        when(qualificationRepository.save(any(Qualification.class))).thenReturn(qualification);
+        when(repository.findById(qualificationId)).thenReturn(Optional.of(qualification));
+        when(repository.findById(typeId)).thenReturn(Optional.of(type));
+        when(repository.save(any(Qualification.class))).thenReturn(qualification);
 
         // Executar o método e verificar o resultado
-        Qualification result = qualificationService.addType(qualificationId, typeId);
+        Qualification result = service.addType(qualificationId, typeId);
         // Adicione aqui asserções para verificar se o resultado está correto
     }
 
@@ -89,10 +89,10 @@ class QualificationServiceTest {
         codes.add("Q002");
 
         // Configurar comportamento do mock
-        when(qualificationRepository.findByCodeList(codes)).thenReturn(new ArrayList<>());
+        when(repository.findByCodeList(codes)).thenReturn(new ArrayList<>());
 
         // Executar o método e verificar o resultado
-        List<Qualification> result = qualificationService.findByCodeList(codes);
+        List<Qualification> result = service.findByCodeList(codes);
         // Adicione aqui asserções para verificar se o resultado está correto
     }
 

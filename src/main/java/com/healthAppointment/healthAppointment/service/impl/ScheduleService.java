@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +50,7 @@ public class ScheduleService implements IScheduleService {
         LocalDate endDate = startDate.plusDays(1);
 
         List<Schedule> response = repository.findScheduleAllByDateTime_Date(startDate, endDate);
-        Collections.sort(response, (schedule1, schedule2) -> schedule1.getDateTime().compareTo(schedule2.getDateTime()));
+        response.sort(Comparator.comparing(Schedule::getDateTime));
         return buildScheduleDTOList(response);
     }
 
