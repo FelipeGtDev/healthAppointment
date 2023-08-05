@@ -6,10 +6,10 @@ import com.healthAppointment.healthAppointment.service.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.util.List;
 
 import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.CREATE_ERROR;
 
@@ -39,4 +39,9 @@ public class ScheduleController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<?> findAllByDate(@RequestParam(value = "date", defaultValue = "") String date) throws ParseException {
+        List<ScheduleDTO> response = service.findAllByDate(date);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

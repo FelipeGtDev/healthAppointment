@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.SCHEDULE_ALREADY_EXISTS;
@@ -22,28 +25,38 @@ public class ScheduleService implements IScheduleService {
     private final ModelMapper modelMapper;
 
 
-
     @Override
-    public ScheduleDTO save(ScheduleDTO requestDTO) throws BusException { // TODO remover comentários quando estiver funcionando
-        // realiza busca por agendamento (dateTime + profissional)
+    public ScheduleDTO save(ScheduleDTO requestDTO) throws BusException {
         Optional<Schedule> existingSchedule = repository.findScheduleByDateTimeAndPratictionerId(requestDTO.getDateTime(), requestDTO.getPratictioner().getId());
-        // if (agendamento existe para essa data e hora? == true) {
-        if (existingSchedule.isPresent()){
+        if (existingSchedule.isPresent()) {
             throw new BusException(SCHEDULE_ALREADY_EXISTS);
         }
-        // converter ScheduleDTO para Schedule
         Schedule request = buildSchedule(requestDTO);
-
-        //if (quantidade de pacientes > quantidade maxima de pacientes no agendamento){
-        int maxPatientsPerAppointment = getMaxPatientsAppointment(request);
-        if (request.getPatients().size() > maxPatientsPerAppointment) {
+        int maxPatientsPerSchedule = getMaxPatientsAppointment(request);
+        if (request.getPatients().size() > maxPatientsPerSchedule) {
+            //TODO loggar erro
             throw new BusException(SCHEDULE_PATIENTS_FULL);
         } else {
-            //      salva agendamento
             Schedule response = repository.save(request);
-            //      retorna agendamento salvo
             return buildScheduleDTO(response);
         }
+    }
+
+    @Override
+    public List<ScheduleDTO> findAllByDate(String date) {
+
+        LocalDate startDate = date.isEmpty() ? LocalDate.now() : LocalDate.parse(date);
+        LocalDate endDate = startDate.plusDays(1);
+
+        List<Schedule> response = repository.findScheduleAllByDateTime_Date(startDate, endDate);
+        Collections.sort(response, (schedule1, schedule2) -> schedule1.getDateTime().compareTo(schedule2.getDateTime()));
+        return buildScheduleDTOList(response);
+    }
+
+    private List<ScheduleDTO> buildScheduleDTOList(List<Schedule> response) {
+        return response.stream()
+                .map(this::buildScheduleDTO)
+                .toList();
     }
 
     private int getMaxPatientsAppointment(Schedule request) { //TODO melhorar futuramente- não deixar hard-coded
