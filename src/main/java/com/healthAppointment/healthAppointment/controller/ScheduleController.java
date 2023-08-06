@@ -43,4 +43,15 @@ public class ScheduleController {
         List<ScheduleDTO> response = service.findAllByDate(date);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    // Buscar por id
+
+    // Add paciente a Agendamento
+
+    // remover Agendamento
+
+    // Editar Agendamento
+
+    // Listar por healthProcedure - apenas agendamentos que não se tornaram consultas (Paginado)
+
 }
