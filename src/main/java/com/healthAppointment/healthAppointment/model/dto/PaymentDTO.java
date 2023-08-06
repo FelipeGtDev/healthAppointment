@@ -1,6 +1,6 @@
 package com.healthAppointment.healthAppointment.model.dto;
 
-import com.healthAppointment.healthAppointment.model.e.PaymentMethod;
+import com.healthAppointment.healthAppointment.model.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
