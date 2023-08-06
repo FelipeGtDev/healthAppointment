@@ -3,7 +3,6 @@ package com.healthAppointment.healthAppointment.service.impl;
 import com.healthAppointment.healthAppointment.exceptions.BusException;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.Schedule;
-import com.healthAppointment.healthAppointment.model.dto.PatientReducedDTO;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
 import com.healthAppointment.healthAppointment.repository.ScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.sql.ClientInfoStatus;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -84,7 +82,7 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void save_shouldThrowExceptionWhenTryCreateMultiplePatientsScheduleInNotPilatesSchedule() throws BusException {
+    void save_shouldThrowExceptionWhenTryCreateMultiplePatientsScheduleInNotPilatesSchedule() {
         //Arrange
         when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitMultiplePatients);
         when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDTOWhitMultiplePatients);
@@ -96,9 +94,9 @@ class ScheduleServiceTest {
     }
 
     @Test
-    void save_shouldThrowExceptionWhenTryCreatePilatesScheduleWithMoreThanSixPatients() throws BusException {
+    void save_shouldThrowExceptionWhenTryCreatePilatesScheduleWithMoreThanSixPatients() {
         //Arrange
-        for (Integer i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             var p = new Patient();
             p.setId(String.valueOf((i + 3)));
             scheduleWhitMultiplePatients.getPatients().add(p);

@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
 import com.healthAppointment.healthAppointment.exceptions.BusException;
+import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.Schedule;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
 import com.healthAppointment.healthAppointment.repository.ScheduleRepository;
@@ -10,12 +11,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.*;
+import static com.healthAppointment.healthAppointment.utils.DateUtils.PATERN_DATE;
 
 @Service
 @RequiredArgsConstructor
@@ -48,13 +50,18 @@ public class ScheduleService implements IScheduleService {
     @Override
     public List<ScheduleDTO> findAllByDate(String date) {
 
-        LocalDate startDate = date.isEmpty() ? LocalDate.now() : LocalDate.parse(date);
-        LocalDate endDate = startDate.plusDays(1);
+        var startDate = date.isEmpty() ? LocalDate.now() : LocalDate.parse(date, DateTimeFormatter.ofPattern(PATERN_DATE));
+        var endDate = startDate.plusDays(1);
 
         List<Schedule> response = repository.findScheduleAllByDateTime_Date(startDate, endDate);
         response.sort(Comparator.comparing(Schedule::getDateTime));
-        validateUnicDate(response);
-        return buildScheduleDTOList(response);
+        try {
+            validateUnicDate(response);
+            return buildScheduleDTOList(response);
+        } catch (Exception e) {
+            //TODO loggar erro de listagem retornando registros de mais de uma data
+            return null;
+        }
     }
 
     private void validateUnicDate(List<Schedule> response) {
@@ -86,7 +93,7 @@ public class ScheduleService implements IScheduleService {
 
     private void duplicatePatientValidation(Schedule request) throws BusException {
         List<String> patientsIds = request.getPatients().stream()
-                .map(patient -> patient.getId())
+                .map(Patient::getId)
                 .toList();
         if (patientsIds.size() != patientsIds.stream().distinct().count()) {
             throw new BusException(DUPLICATE_PATIENT);

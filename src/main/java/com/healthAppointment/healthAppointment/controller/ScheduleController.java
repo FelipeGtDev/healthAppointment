@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 
 import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.CREATE_ERROR;
@@ -40,7 +39,7 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllByDate(@RequestParam(value = "date", defaultValue = "") String date) throws ParseException, BusException {
+    public ResponseEntity<?> findAllByDate(@RequestParam(value = "date", defaultValue = "") String date){
         List<ScheduleDTO> response = service.findAllByDate(date);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

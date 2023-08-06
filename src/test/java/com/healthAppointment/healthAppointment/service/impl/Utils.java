@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class Utils {
@@ -89,7 +90,7 @@ public class Utils {
         return patientDTO;
     }
 
-    public PatientReducedDTO createPatientReducedDTO(Patient patient) throws ParseException {
+    public PatientReducedDTO createPatientReducedDTO(Patient patient) {
 
         return modelMapper.map(patient, PatientReducedDTO.class);
     }
@@ -115,7 +116,7 @@ public class Utils {
                 "1", "CRM", StateAcronym.SP, qualification);
         pratictioner.setRegulatoryAgency(agency);
         pratictioner.setRegisterNumber("12345678901");
-        pratictioner.setQualifications(new ArrayList<>(Arrays.asList(qualification)));
+        pratictioner.setQualifications(new ArrayList<>(List.of(qualification)));
 
         return pratictioner;
     }
@@ -138,7 +139,7 @@ public class Utils {
                 "1", "CRM", StateAcronym.SP, qualificationReduced);
         pratictionerDTO.setRegulatoryAgency(agency);
         pratictionerDTO.setRegisterNumber("12345678901");
-        pratictionerDTO.setQualifications(new ArrayList<>(Arrays.asList(qualification)));
+        pratictionerDTO.setQualifications(new ArrayList<>(List.of(qualification)));
 
         return pratictionerDTO;
     }
@@ -167,7 +168,7 @@ public class Utils {
         qualification.setName("Pilates");
         qualification.setCode("50000861");
         qualification.setDescription("descriptionPilates");
-        qualification.setTypes(new ArrayList<>(Arrays.asList(createQualificationPhisioterapy())));
+        qualification.setTypes(new ArrayList<>(List.of(createQualificationPhisioterapy())));
 
         return qualification;
     }
@@ -184,7 +185,7 @@ public class Utils {
         schedule.setId("1");
         schedule.setDateTime(LocalDateTime.parse("2023-12-01T08:00:00"));
         schedule.setPratictioner(createPratictioner1());
-        schedule.setPatients(new ArrayList<>(Arrays.asList(createPatient1())));
+        schedule.setPatients(new ArrayList<>(List.of(createPatient1())));
         schedule.setHealthProcedure(createQualificationPhisioterapy());
 //        scheduleDTO.setAppointments(new ArrayList<>(Arrays.asList()));
 
@@ -206,7 +207,7 @@ public class Utils {
         scheduleDTO.setId("1");
         scheduleDTO.setDateTime(LocalDateTime.parse("2023-12-01T08:00:00"));
         scheduleDTO.setPratictioner(createPratictionerReducedDTO1());
-        scheduleDTO.setPatients(new ArrayList<>(Arrays.asList(createPatientReducedDTO(createPatient1()))));
+        scheduleDTO.setPatients(new ArrayList<>(List.of(createPatientReducedDTO(createPatient1()))));
         scheduleDTO.setHealthProcedure(createQualificationReducedDTO(createQualificationPhisioterapy()));
 //        scheduleDTO.setAppointments(new ArrayList<>(Arrays.asList()));
 
