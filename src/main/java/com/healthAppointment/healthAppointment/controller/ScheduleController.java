@@ -40,7 +40,7 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllByDate(@RequestParam(value = "date", defaultValue = "") String date) throws ParseException {
+    public ResponseEntity<?> findAllByDate(@RequestParam(value = "date", defaultValue = "") String date) throws ParseException, BusException {
         List<ScheduleDTO> response = service.findAllByDate(date);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

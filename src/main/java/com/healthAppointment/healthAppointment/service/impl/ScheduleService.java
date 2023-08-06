@@ -15,8 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.SCHEDULE_ALREADY_EXISTS;
-import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.SCHEDULE_PATIENTS_FULL;
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +27,9 @@ public class ScheduleService implements IScheduleService {
 
     @Override
     public ScheduleDTO save(ScheduleDTO requestDTO) throws BusException {
-        Optional<Schedule> existingSchedule = repository.findScheduleByDateTimeAndPratictionerId(requestDTO.getDateTime(), requestDTO.getPratictioner().getId());
+        Optional<Schedule> existingSchedule = repository.findScheduleByDateTimeAndPratictionerId(
+                requestDTO.getDateTime(),
+                requestDTO.getPratictioner().getId());
         if (existingSchedule.isPresent()) {
             throw new BusException(SCHEDULE_ALREADY_EXISTS);
         }
@@ -38,6 +39,7 @@ public class ScheduleService implements IScheduleService {
             //TODO loggar erro
             throw new BusException(SCHEDULE_PATIENTS_FULL);
         } else {
+            duplicatePatientValidation(request);
             Schedule response = repository.save(request);
             return buildScheduleDTO(response);
         }
@@ -51,7 +53,17 @@ public class ScheduleService implements IScheduleService {
 
         List<Schedule> response = repository.findScheduleAllByDateTime_Date(startDate, endDate);
         response.sort(Comparator.comparing(Schedule::getDateTime));
+        validateUnicDate(response);
         return buildScheduleDTOList(response);
+    }
+
+    private void validateUnicDate(List<Schedule> response) {
+        if (response.size() > 0) {
+            LocalDate date = response.get(0).getDateTime().toLocalDate();
+            response.forEach(schedule -> {
+                assert (!schedule.getDateTime().toLocalDate().equals(date));
+            });
+        }
     }
 
     private List<ScheduleDTO> buildScheduleDTOList(List<Schedule> response) {
@@ -70,5 +82,14 @@ public class ScheduleService implements IScheduleService {
 
     private ScheduleDTO buildScheduleDTO(Schedule response) {
         return modelMapper.map(response, ScheduleDTO.class);
+    }
+
+    private void duplicatePatientValidation(Schedule request) throws BusException {
+        List<String> patientsIds = request.getPatients().stream()
+                .map(patient -> patient.getId())
+                .toList();
+        if (patientsIds.size() != patientsIds.stream().distinct().count()) {
+            throw new BusException(DUPLICATE_PATIENT);
+        }
     }
 }

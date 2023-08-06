@@ -10,5 +10,5 @@ public interface IScheduleService {
 
     ScheduleDTO save(ScheduleDTO request) throws BusException;
 
-    List<ScheduleDTO> findAllByDate(String date) throws ParseException;
+    List<ScheduleDTO> findAllByDate(String date) throws ParseException, BusException;
 }

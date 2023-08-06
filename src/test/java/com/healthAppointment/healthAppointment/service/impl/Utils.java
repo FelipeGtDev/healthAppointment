@@ -165,7 +165,7 @@ public class Utils {
 
         qualification.setId("1");
         qualification.setName("Pilates");
-        qualification.setCode("50000853");
+        qualification.setCode("50000861");
         qualification.setDescription("descriptionPilates");
         qualification.setTypes(new ArrayList<>(Arrays.asList(createQualificationPhisioterapy())));
 
@@ -187,6 +187,15 @@ public class Utils {
         schedule.setPatients(new ArrayList<>(Arrays.asList(createPatient1())));
         schedule.setHealthProcedure(createQualificationPhisioterapy());
 //        scheduleDTO.setAppointments(new ArrayList<>(Arrays.asList()));
+
+        return schedule;
+    }
+
+    public Schedule createScheduleWhithMultiplePatients() throws ParseException {
+        var schedule = createScheduleWhithOnePatient();
+
+        schedule.setHealthProcedure(createQualificationPilates());
+        schedule.getPatients().add(createPatient2());
 
         return schedule;
     }
