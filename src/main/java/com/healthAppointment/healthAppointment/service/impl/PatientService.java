@@ -51,12 +51,9 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PatientDTO findById(String id) throws Exception {
+    public PatientDTO findById(String id)  {
         Optional<Patient> responseOp = repository.findById(id);
-        if (responseOp.isEmpty()) {
-            throw new Exception("Paciente não encontrado");
-        }
-        return buildPatientDTO(responseOp.get());
+        return responseOp.map(this::buildPatientDTO).orElse(null);
     }
 
     @Override

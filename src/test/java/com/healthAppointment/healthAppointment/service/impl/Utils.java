@@ -96,7 +96,7 @@ public class Utils {
     }
 
 
-    // ############################### PRATICTIOINER ##########################################
+    // ############################### PRATICTIONER ##########################################
 
     public Pratictioner createPratictioner1() throws ParseException {
         Pratictioner pratictioner = new Pratictioner();

@@ -1,8 +1,10 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
 import com.healthAppointment.healthAppointment.exceptions.BusException;
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.Schedule;
+import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
 import com.healthAppointment.healthAppointment.repository.ScheduleRepository;
 import com.healthAppointment.healthAppointment.service.IScheduleService;
@@ -25,6 +27,7 @@ public class ScheduleService implements IScheduleService {
 
     private final ScheduleRepository repository;
     private final ModelMapper modelMapper;
+    private final PatientService patientService;
 
 
     @Override
@@ -36,14 +39,23 @@ public class ScheduleService implements IScheduleService {
             throw new BusException(SCHEDULE_ALREADY_EXISTS);
         }
         Schedule request = buildSchedule(requestDTO);
-        int maxPatientsPerSchedule = getMaxPatientsAppointment(request);
-        if (request.getPatients().size() > maxPatientsPerSchedule) {
+        validatePatientsPerSchedule(request);
+
+//        int maxPatientsPerSchedule = getMaxPatientsAppointment(request);
+//        if (request.getPatients().size() > maxPatientsPerSchedule) {
+//            //TODO loggar erro
+//            throw new BusException(SCHEDULE_PATIENTS_FULL);
+//        } else {
+        duplicatePatientValidation(request);
+        Schedule response = repository.save(request);
+        return buildScheduleDTO(response);
+//        }
+    }
+
+    private void validatePatientsPerSchedule(Schedule request) throws BusException {
+        if (request.getPatients().size() > getMaxPatientsAppointment(request)) {
             //TODO loggar erro
             throw new BusException(SCHEDULE_PATIENTS_FULL);
-        } else {
-            duplicatePatientValidation(request);
-            Schedule response = repository.save(request);
-            return buildScheduleDTO(response);
         }
     }
 
@@ -61,6 +73,42 @@ public class ScheduleService implements IScheduleService {
         } catch (Exception e) {
             //TODO loggar erro de listagem retornando registros de mais de uma data
             return null;
+        }
+    }
+
+    @Override
+    public ScheduleDTO findById(String id) {
+        Optional<Schedule> response = repository.findById(id);
+        return buildScheduleDTO(response.orElse(null));
+    }
+
+    @Override
+    public ScheduleDTO addPatient(String id, String patientId) throws BusException {
+        Optional<Schedule> schedule = repository.findById(id);
+        Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.findById(patientId));
+        areScheduleAndPatientPresent(schedule, patientDTO);
+
+        Optional<Patient> patient = Optional.ofNullable(modelMapper.map(patientDTO.get(), Patient.class));
+
+        // TODO validar se quantidade de paciente é compatível a healthProcedure
+
+        var request = schedule.get();
+        request.getPatients().add(patient.get());
+        duplicatePatientValidation(request);
+
+        Schedule response = repository.save(schedule.get());
+        return buildScheduleDTO(response);
+
+    }
+
+    private void areScheduleAndPatientPresent(Optional<Schedule> schedule, Optional<PatientDTO> patientDTO) throws BusException {
+        if (schedule.isEmpty()) {
+            //TODO loggar erro
+            throw new BusException(SCHEDULE_NOT_FOUND);
+        }
+        if (patientDTO.isEmpty()) {
+            //TODO loggar erro
+            throw new BusException(PATIENT_NOT_FOUND);
         }
     }
 

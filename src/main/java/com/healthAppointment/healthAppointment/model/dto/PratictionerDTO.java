@@ -25,4 +25,5 @@ public class PratictionerDTO extends PersonDTO {
     private String registerNumber;
     @NotNull
     private List<QualificationDTO> qualifications;
+    private Boolean active = true;
 }

@@ -52,7 +52,20 @@ public class PratictionerService implements IPratictionerService {
     @Override
     public Page<PratictionerDTO> findAllActive(Pageable page) {
         Page<Pratictioner> response = repository.findAllActive(page);
+        validateActivePratictionerList(response);
+
         return buildPratictionerDTOList(response);
+    }
+
+    private void validateActivePratictionerList(Page<Pratictioner> response) {
+        try {
+            response.getContent().forEach(pratictioner -> {
+                assert pratictioner.getActive().equals(true);
+            });
+        } catch (AssertionError e) {
+            // loggar o erro
+            throw new AssertionError("Erro ao buscar profissionais ativos");
+        }
     }
 
     @Override

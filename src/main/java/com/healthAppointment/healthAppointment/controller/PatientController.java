@@ -27,7 +27,7 @@ public class PatientController {
         try {
             PatientDTO response = service.save(request);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao salvar Paciente" + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
@@ -55,12 +55,8 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") String id) {
-        try {
-            PatientDTO response = service.findById(id);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        PatientDTO response = service.findById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/listByName")

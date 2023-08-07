@@ -14,7 +14,7 @@ public interface IPatientService {
 
     Page<PatientDTO> findAll(Pageable page);
 
-    PatientDTO findById(String id) throws Exception;
+    PatientDTO findById(String id);
 
     Page<PatientDTO> findByName(String name, Pageable page);
 

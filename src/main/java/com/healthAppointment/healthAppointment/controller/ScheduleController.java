@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.controller;
 
 import com.healthAppointment.healthAppointment.exceptions.BusException;
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
 import com.healthAppointment.healthAppointment.service.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.CREATE_ERROR;
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.UPDATE_ERROR;
 
 @RestController
 @RequestMapping("/schedule")
@@ -39,19 +41,39 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAllByDate(@RequestParam(value = "date", defaultValue = "") String date){
+    public ResponseEntity<?> findAllByDate(@RequestParam(value = "date", defaultValue = "") String date) {
         List<ScheduleDTO> response = service.findAllByDate(date);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // Buscar por id
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable String id) {
+        ScheduleDTO response = service.findById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     // Add paciente a Agendamento
+    @PutMapping("/{id}/patient/{patientId}")
+    public ResponseEntity<?> addPatient(@PathVariable String id, @PathVariable String patientId) {
+        try {
+            ScheduleDTO response = service.addPatient(id, patientId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusException e) {
+            //TODO loggar erro
+            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
+        } catch (Exception e) {
+            //TODO loggar erro
+            return ResponseEntity.internalServerError().body(UPDATE_ERROR);
+        }
+    }
 
-    // remover Agendamento
+// Editar Agendamento
 
-    // Editar Agendamento
+// remover Agendamento
 
-    // Listar por healthProcedure - apenas agendamentos que não se tornaram consultas (Paginado)
+
+// Listar por healthProcedure - apenas agendamentos que não se tornaram consultas (Paginado)
 
 }
