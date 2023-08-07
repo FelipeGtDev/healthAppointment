@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.CREATE_ERROR;
-import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.UPDATE_ERROR;
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.*;
 
 @RestController
 @RequestMapping("/schedule")
@@ -52,8 +51,7 @@ public class ScheduleController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // Add paciente a Agendamento
-    @PutMapping("/{id}/patient/{patientId}")
+    @PutMapping("/{id}/add-patient/{patientId}")
     public ResponseEntity<?> addPatient(@PathVariable String id, @PathVariable String patientId) {
         try {
             ScheduleDTO response = service.addPatient(id, patientId);
@@ -69,11 +67,76 @@ public class ScheduleController {
         }
     }
 
-// Editar Agendamento
+    @PutMapping("/{id}/remove-patient/{patientId}")
+    public ResponseEntity<?> removePatient(@PathVariable String id, @PathVariable String patientId) {
+        try {
+            ScheduleDTO response = service.removePatient(id, patientId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusException e) {
+            //TODO loggar erro
+            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            //TODO loggar erro
+            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
+        } catch (Exception e) {
+            //TODO loggar erro
+            return ResponseEntity.internalServerError().body(UPDATE_ERROR);
+        }
+    }
 
-// remover Agendamento
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody ScheduleDTO request) {
+        try {
+            ScheduleDTO response = service.update(id, request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            //TODO loggar erro
+            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
+        } catch (BusException e) {
+            //TODO loggar erro
+            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
+        } catch (Exception e) {
+            //TODO loggar erro
+            return ResponseEntity.internalServerError().body(UPDATE_ERROR);
+        }
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        try {
+            service.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            //TODO loggar erro
+            return ResponseEntity.badRequest().body(DELETE_ERROR + e.getMessage());
+        } catch (Exception e) {
+            //TODO loggar erro
+            return ResponseEntity.internalServerError().body(DELETE_ERROR);
+        }
+    }
 
 // Listar por healthProcedure - apenas agendamentos que não se tornaram consultas (Paginado)
+//
+// TODO criar metodo abaixo quando necessário. Deve realizar Specification
+//    @GetMapping
+//    public Page<ScheduleDTO> listAll(
+//            @RequestParam(required = false) String pratictionerId,
+//            @RequestParam(required = false) String patientId,
+//            @RequestParam(required = false) String healthProcedureCode,
+//            @RequestParam(required = false) String startDate,
+//            @RequestParam(required = false) String endDate,
+//            @PageableDefault(size = 25, page = 0, direction = Sort.Direction.DESC, sort = {"updatedAt"}) Pageable page) {
+//        {
+//            var request = new ScheduleDTO();
+////            if (!pratictionerId.isEmpty()) request.getPratictioner().setId(pratictionerId);
+//            if (!patientId.isEmpty()) {
+//                request.getPatients().add(new PatientReducedDTO(patientId));
+//            }
+//            if (!healthProcedureCode.isEmpty()) request.getHealthProcedure().setCode(healthProcedureCode);
+//
+//
+//            Page<ScheduleDTO> response = service.listAll(request, startDate, endDate, page);
+//            return response;
+//        }
 
 }

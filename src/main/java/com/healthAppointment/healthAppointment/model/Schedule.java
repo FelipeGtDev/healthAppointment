@@ -21,7 +21,7 @@ public class Schedule {
     private String id;
     private LocalDateTime dateTime;
     private Pratictioner pratictioner;
-    private int maxPatients;
+    private Integer maxPatients;
     private List<Patient> patients;
     private Qualification healthProcedure;
     private List<Appointment> appointments;

@@ -146,4 +146,35 @@ class ScheduleServiceTest {
         // Act & Assert
         assertThrows(AssertionError.class, () -> service.findAllByDate(""));
     }
+
+    // ##################### ADD PATIENT IN SCHEDULE #####################
+
+    // sucesso
+
+    // deve retornar exceção se não encontrar agendamento
+
+    // deve retornar exceção se não encontrar paciente
+
+    // deve retornar exceção se agendamento estiver cheio
+
+    // deve retornar exceção se paciente já estiver no agendamento
+
+    // ##################### REMOVE PATIENT IN SCHEDULE #####################
+
+    // sucesso
+
+    // deve retornar exceção se não encontrar agendamento
+
+    // deve retornar exceção se não encontrar paciente
+
+
+    // ##################### UPDATE #####################
+
+    // ##################### FIND BY DATE #####################
+
+    // sucesso
+
+    // deve retornar exceção se não encontrar nenhum agendamento
+
+    // deve retornar exceção se data do agendamento for anterior a data atual
 }

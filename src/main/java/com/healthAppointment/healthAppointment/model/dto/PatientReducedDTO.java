@@ -21,4 +21,8 @@ public class PatientReducedDTO {
     private HumanNameDTO name;
 
     private ContactsDTO contacts;
+
+    public PatientReducedDTO(String id) {
+        this.id = id;
+    }
 }

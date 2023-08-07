@@ -15,4 +15,10 @@ public interface IScheduleService {
     ScheduleDTO findById(String id);
 
     ScheduleDTO addPatient(String id, String patientId) throws Exception, BusException, ResourceNotFoundException;
+
+    ScheduleDTO update(String id, ScheduleDTO request) throws ResourceNotFoundException, BusException;
+
+    void delete(String id) throws ResourceNotFoundException;
+
+    ScheduleDTO removePatient(String id, String patientId) throws ResourceNotFoundException, BusException;
 }

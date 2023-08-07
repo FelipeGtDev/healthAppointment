@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
@@ -29,7 +30,6 @@ public class ScheduleService implements IScheduleService {
     private final ModelMapper modelMapper;
     private final PatientService patientService;
 
-
     @Override
     public ScheduleDTO save(ScheduleDTO requestDTO) throws BusException {
         Optional<Schedule> existingSchedule = repository.findScheduleByDateTimeAndPratictionerId(
@@ -39,17 +39,12 @@ public class ScheduleService implements IScheduleService {
             throw new BusException(SCHEDULE_ALREADY_EXISTS);
         }
         Schedule request = buildSchedule(requestDTO);
-        validatePatientsPerSchedule(request);
 
-//        int maxPatientsPerSchedule = getMaxPatientsAppointment(request);
-//        if (request.getPatients().size() > maxPatientsPerSchedule) {
-//            //TODO loggar erro
-//            throw new BusException(SCHEDULE_PATIENTS_FULL);
-//        } else {
+        validatePatientsPerSchedule(request);
         duplicatePatientValidation(request);
+
         Schedule response = repository.save(request);
         return buildScheduleDTO(response);
-//        }
     }
 
     private void validatePatientsPerSchedule(Schedule request) throws BusException {
@@ -83,32 +78,84 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public ScheduleDTO addPatient(String id, String patientId) throws BusException {
+    public ScheduleDTO addPatient(String id, String patientId) throws BusException, ResourceNotFoundException {
         Optional<Schedule> schedule = repository.findById(id);
         Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.findById(patientId));
         areScheduleAndPatientPresent(schedule, patientDTO);
 
         Optional<Patient> patient = Optional.ofNullable(modelMapper.map(patientDTO.get(), Patient.class));
 
-        // TODO validar se quantidade de paciente é compatível a healthProcedure
-
         var request = schedule.get();
-        request.getPatients().add(patient.get());
+        request.addPatient(patient.get());
+//        request.getPatients().add(patient.get()); TODO Remover se estiver funcionando
+
+        validatePatientsPerSchedule(request);
         duplicatePatientValidation(request);
 
-        Schedule response = repository.save(schedule.get());
+        Schedule response = repository.save(request);
         return buildScheduleDTO(response);
 
     }
 
-    private void areScheduleAndPatientPresent(Optional<Schedule> schedule, Optional<PatientDTO> patientDTO) throws BusException {
+    @Override
+    public ScheduleDTO update(String id, ScheduleDTO requestDTO) throws ResourceNotFoundException, BusException {
+        Optional<Schedule> schedule = repository.findById(id);
         if (schedule.isEmpty()) {
             //TODO loggar erro
-            throw new BusException(SCHEDULE_NOT_FOUND);
+            throw new ResourceNotFoundException(SCHEDULE_NOT_FOUND);
+        }
+        var request = buildSchedule(requestDTO);
+
+        validatePatientsPerSchedule(request);
+        duplicatePatientValidation(request);
+
+        request.setId(id);
+        Schedule response = repository.save(request);
+
+        return buildScheduleDTO(response);
+    }
+
+    @Override
+    public void delete(String id) throws ResourceNotFoundException {
+        Optional<Schedule> schedule = repository.findById(id);
+        if (schedule.isEmpty()) {
+            //TODO loggar erro
+            throw new ResourceNotFoundException(SCHEDULE_NOT_FOUND);
+        }
+        if (schedule.get().getDateTime().isBefore(LocalDateTime.now())) {
+            //TODO loggar erro
+            throw new ResourceNotFoundException(SCHEDULE_NOT_FOUND);
+        }
+
+        repository.deleteById(id);
+    }
+
+    @Override
+    public ScheduleDTO removePatient(String id, String patientId) throws ResourceNotFoundException, BusException {
+        Optional<Schedule> schedule = repository.findById(id);
+        Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.findById(patientId));
+        areScheduleAndPatientPresent(schedule, patientDTO);
+
+        Optional<Patient> patient = Optional.ofNullable(modelMapper.map(patientDTO.get(), Patient.class));
+
+        var request = schedule.get();
+        request.getPatients().removeIf((p) -> p.getId().equals(patientId));
+
+        validatePatientsPerSchedule(request);
+        duplicatePatientValidation(request);
+
+        Schedule response = repository.save(request);
+        return buildScheduleDTO(response);
+    }
+
+    private void areScheduleAndPatientPresent(Optional<Schedule> schedule, Optional<PatientDTO> patientDTO) throws ResourceNotFoundException {
+        if (schedule.isEmpty()) {
+            //TODO loggar erro
+            throw new ResourceNotFoundException(SCHEDULE_NOT_FOUND);
         }
         if (patientDTO.isEmpty()) {
             //TODO loggar erro
-            throw new BusException(PATIENT_NOT_FOUND);
+            throw new ResourceNotFoundException(PATIENT_NOT_FOUND);
         }
     }
 
@@ -128,7 +175,11 @@ public class ScheduleService implements IScheduleService {
     }
 
     private int getMaxPatientsAppointment(Schedule request) { //TODO melhorar futuramente- não deixar hard-coded
+        request.setMaxPatients(request.getHealthProcedure().getCode().equals("50000861") ? 6 : 1);
+
+        //TODO apagar linha abaixo e mudar metodo para void
         return request.getHealthProcedure().getCode().equals("50000861") ? 6 : 1;
+//        return 0;
     }
 
     private Schedule buildSchedule(ScheduleDTO requestDTO) {

@@ -2,8 +2,9 @@ package com.healthAppointment.healthAppointment.model;
 
 public class AppConstants {
     public static class Messages {
-        public static final String CREATE_ERROR = "Erro ao criar!";
-        public static final String UPDATE_ERROR = "Erro ao atualizar!";
+        public static final String CREATE_ERROR = "Erro ao criar! ";
+        public static final String UPDATE_ERROR = "Erro ao atualizar! ";
+        public static final String DELETE_ERROR = "Erro ao excluir! ";
 
         // #################### PATIENT ####################
         public static final String PATIENT_NOT_FOUND = "Paciente não encontrado.";
