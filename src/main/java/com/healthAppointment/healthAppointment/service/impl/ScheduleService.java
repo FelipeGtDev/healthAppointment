@@ -5,6 +5,7 @@ import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundExcept
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.Schedule;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
+import com.healthAppointment.healthAppointment.model.dto.PatientReducedDTO;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
 import com.healthAppointment.healthAppointment.repository.ScheduleRepository;
 import com.healthAppointment.healthAppointment.service.IScheduleService;
@@ -47,13 +48,6 @@ public class ScheduleService implements IScheduleService {
         return buildScheduleDTO(response);
     }
 
-    private void validatePatientsPerSchedule(Schedule request) throws BusException {
-        if (request.getPatients().size() > getMaxPatientsAppointment(request)) {
-            //TODO loggar erro
-            throw new BusException(SCHEDULE_PATIENTS_FULL);
-        }
-    }
-
     @Override
     public List<ScheduleDTO> findAllByDate(String date) {
 
@@ -81,13 +75,14 @@ public class ScheduleService implements IScheduleService {
     public ScheduleDTO addPatient(String id, String patientId) throws BusException, ResourceNotFoundException {
         Optional<Schedule> schedule = repository.findById(id);
         Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.findById(patientId));
+
         areScheduleAndPatientPresent(schedule, patientDTO);
 
-        Optional<Patient> patient = Optional.ofNullable(modelMapper.map(patientDTO.get(), Patient.class));
+        PatientReducedDTO patientReducedDTO = modelMapper.map(patientDTO.get(), PatientReducedDTO.class);
+        Patient patient = modelMapper.map(patientReducedDTO, Patient.class);
 
         var request = schedule.get();
-        request.addPatient(patient.get());
-//        request.getPatients().add(patient.get()); TODO Remover se estiver funcionando
+        request.getPatients().add(patient);
 
         validatePatientsPerSchedule(request);
         duplicatePatientValidation(request);
@@ -136,8 +131,6 @@ public class ScheduleService implements IScheduleService {
         Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.findById(patientId));
         areScheduleAndPatientPresent(schedule, patientDTO);
 
-        Optional<Patient> patient = Optional.ofNullable(modelMapper.map(patientDTO.get(), Patient.class));
-
         var request = schedule.get();
         request.getPatients().removeIf((p) -> p.getId().equals(patientId));
 
@@ -146,6 +139,14 @@ public class ScheduleService implements IScheduleService {
 
         Schedule response = repository.save(request);
         return buildScheduleDTO(response);
+    }
+
+    private void validatePatientsPerSchedule(Schedule request) throws BusException {
+        getMaxPatientsAppointment(request);
+        if (request.getPatients().size() > request.getMaxPatients()) {
+            //TODO loggar erro
+            throw new BusException(SCHEDULE_PATIENTS_FULL);
+        }
     }
 
     private void areScheduleAndPatientPresent(Optional<Schedule> schedule, Optional<PatientDTO> patientDTO) throws ResourceNotFoundException {
@@ -174,12 +175,8 @@ public class ScheduleService implements IScheduleService {
                 .toList();
     }
 
-    private int getMaxPatientsAppointment(Schedule request) { //TODO melhorar futuramente- não deixar hard-coded
+    private void getMaxPatientsAppointment(Schedule request) { //TODO melhorar futuramente- não deixar hard-coded
         request.setMaxPatients(request.getHealthProcedure().getCode().equals("50000861") ? 6 : 1);
-
-        //TODO apagar linha abaixo e mudar metodo para void
-        return request.getHealthProcedure().getCode().equals("50000861") ? 6 : 1;
-//        return 0;
     }
 
     private Schedule buildSchedule(ScheduleDTO requestDTO) {

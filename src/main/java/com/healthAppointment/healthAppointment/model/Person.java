@@ -2,9 +2,7 @@ package com.healthAppointment.healthAppointment.model;
 
 import com.healthAppointment.healthAppointment.model.enums.Gender;
 import com.healthAppointment.healthAppointment.utils.DateUtils;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -13,8 +11,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-//@AllArgsConstructor
-
+@AllArgsConstructor
 public abstract class Person {
 
 
