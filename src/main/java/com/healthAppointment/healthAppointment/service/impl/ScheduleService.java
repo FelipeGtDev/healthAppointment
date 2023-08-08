@@ -143,10 +143,13 @@ public class ScheduleService implements IScheduleService {
 
     private void validatePatientsPerSchedule(Schedule request) throws BusException {
         getMaxPatientsAppointment(request);
-        if (request.getPatients().size() > request.getMaxPatients()) {
-            //TODO loggar erro
-            throw new BusException(SCHEDULE_PATIENTS_FULL);
+        if (request.getPatients() == null) {
+            return;
         }
+            if (request.getPatients().size() > request.getMaxPatients()) {
+                //TODO loggar erro
+                throw new BusException(SCHEDULE_PATIENTS_FULL);
+            }
     }
 
     private void areScheduleAndPatientPresent(Optional<Schedule> schedule, Optional<PatientDTO> patientDTO) throws ResourceNotFoundException {
@@ -188,6 +191,9 @@ public class ScheduleService implements IScheduleService {
     }
 
     private void duplicatePatientValidation(Schedule request) throws BusException {
+        if (request.getPatients() == null) {
+            return;
+        }
         List<String> patientsIds = request.getPatients().stream()
                 .map(Patient::getId)
                 .toList();

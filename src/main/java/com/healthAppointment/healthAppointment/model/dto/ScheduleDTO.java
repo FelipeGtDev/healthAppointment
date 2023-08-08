@@ -21,4 +21,13 @@ public class ScheduleDTO {
     private List<PatientReducedDTO> patients;
     private QualificationReducedDTO healthProcedure;
     private List<AppointmentDTO> appointments; // TODO acho q nao precisa disso aqui
+
+    public ScheduleDTO(ScheduleDTO scheduleDTO) {
+        this.id = scheduleDTO.getId();
+        this.dateTime = scheduleDTO.getDateTime();
+        this.pratictioner = scheduleDTO.getPratictioner();
+        this.patients = scheduleDTO.getPatients();
+        this.healthProcedure = scheduleDTO.getHealthProcedure();
+        this.appointments = scheduleDTO.getAppointments();
+    }
 }

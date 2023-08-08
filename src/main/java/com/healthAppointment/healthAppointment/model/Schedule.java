@@ -26,6 +26,16 @@ public class Schedule {
     private Qualification healthProcedure;
     private List<Appointment> appointments;
 
+    public Schedule(Schedule scheduleWhitOnePatient) {
+        this.id = scheduleWhitOnePatient.getId();
+        this.dateTime = scheduleWhitOnePatient.getDateTime();
+        this.pratictioner = scheduleWhitOnePatient.getPratictioner();
+        this.maxPatients = scheduleWhitOnePatient.getMaxPatients();
+        this.patients = scheduleWhitOnePatient.getPatients();
+        this.healthProcedure = scheduleWhitOnePatient.getHealthProcedure();
+        this.appointments = scheduleWhitOnePatient.getAppointments();
+    }
+
 
     public void addPatient(Patient patient) throws BusException {
         if (this.patients.size() < this.maxPatients) {

@@ -1,6 +1,7 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
 import com.healthAppointment.healthAppointment.exceptions.BusException;
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.Schedule;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
@@ -31,10 +32,11 @@ class ScheduleServiceTest {
     private Schedule scheduleWhitMultiplePatients;
     @Mock
     private ScheduleRepository repository;
-    @InjectMocks
-    private ScheduleService service;
     @Mock
     private ModelMapper modelMapper;
+
+    @InjectMocks
+    private ScheduleService service;
 
     private final Utils utils;
 
@@ -65,7 +67,6 @@ class ScheduleServiceTest {
         when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitOnePatient);
         when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDtoWhitOnePatient);
 
-
         // Act
         var result = service.save(scheduleDtoWhitOnePatient);
 
@@ -77,6 +78,32 @@ class ScheduleServiceTest {
         assertEquals(scheduleDtoWhitOnePatient.getPatients().size(), result.getPatients().size());
         assertEquals(scheduleDtoWhitOnePatient.getPatients().get(0), result.getPatients().get(0));
         assertEquals(scheduleDtoWhitOnePatient.getHealthProcedure(), result.getHealthProcedure());
+
+        verify(repository, times(1)).save(any());
+    }
+
+    @Test
+    void save_shouldReturnScheduleWithoutPatient() throws BusException {
+
+        //Arrange
+        var scheduleDtoWithoutPatient = new ScheduleDTO(scheduleDtoWhitOnePatient);
+        var scheduleWithoutPatient = new Schedule(scheduleWhitOnePatient);
+        scheduleWithoutPatient.setPatients(null);
+        scheduleDtoWithoutPatient.setPatients(null);
+        when(repository.save(any())).thenReturn(scheduleWithoutPatient);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWithoutPatient);
+        when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDtoWithoutPatient);
+
+        // Act
+        var result = service.save(scheduleDtoWithoutPatient);
+
+        // Assert
+        assertNotNull(result);
+
+        assertEquals(scheduleDtoWithoutPatient.getPratictioner(), result.getPratictioner());
+        assertEquals(scheduleDtoWithoutPatient.getDateTime(), result.getDateTime());
+        assertNull(result.getPatients());
+        assertEquals(scheduleDtoWithoutPatient.getHealthProcedure(), result.getHealthProcedure());
 
         verify(repository, times(1)).save(any());
     }
@@ -150,6 +177,29 @@ class ScheduleServiceTest {
     // ##################### ADD PATIENT IN SCHEDULE #####################
 
     // sucesso
+
+    @Test
+    void addPatient_shouldReturnScheduleWhitOnePatient() throws BusException, ResourceNotFoundException {
+        //Arrange
+        when(repository.findById(any())).thenReturn(Optional.ofNullable(scheduleWhitOnePatient));
+        when(repository.save(any())).thenReturn(scheduleWhitOnePatient);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitOnePatient);
+        when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDtoWhitOnePatient);
+
+        // Act
+        var result = service.addPatient("id", "patientId");
+
+        // Assert
+        assertNotNull(result);
+
+        assertEquals(scheduleDtoWhitOnePatient.getPratictioner(), result.getPratictioner());
+        assertEquals(scheduleDtoWhitOnePatient.getDateTime(), result.getDateTime());
+        assertEquals(scheduleDtoWhitOnePatient.getPatients().size(), result.getPatients().size());
+        assertEquals(scheduleDtoWhitOnePatient.getPatients().get(0), result.getPatients().get(0));
+        assertEquals(scheduleDtoWhitOnePatient.getHealthProcedure(), result.getHealthProcedure());
+
+        verify(repository, times(1)).save(any());
+    }
 
     // deve retornar exceção se não encontrar agendamento
 
