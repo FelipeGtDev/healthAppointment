@@ -82,14 +82,22 @@ public class ScheduleService implements IScheduleService {
         Patient patient = modelMapper.map(patientReducedDTO, Patient.class);
 
         var request = schedule.get();
-        request.getPatients().add(patient);
 
+        addNewPatientOnSchedule(request, patient);
         validatePatientsPerSchedule(request);
         duplicatePatientValidation(request);
 
         Schedule response = repository.save(request);
         return buildScheduleDTO(response);
 
+    }
+
+    private void addNewPatientOnSchedule(Schedule schedule, Patient patient) {
+        if (schedule.getPatients() == null) {
+            schedule.setPatients(List.of(patient));
+        } else {
+            schedule.getPatients().add(patient);
+        }
     }
 
     @Override
@@ -146,10 +154,10 @@ public class ScheduleService implements IScheduleService {
         if (request.getPatients() == null) {
             return;
         }
-            if (request.getPatients().size() > request.getMaxPatients()) {
-                //TODO loggar erro
-                throw new BusException(SCHEDULE_PATIENTS_FULL);
-            }
+        if (request.getPatients().size() > request.getMaxPatients()) {
+            //TODO loggar erro
+            throw new BusException(SCHEDULE_PATIENTS_FULL);
+        }
     }
 
     private void areScheduleAndPatientPresent(Optional<Schedule> schedule, Optional<PatientDTO> patientDTO) throws ResourceNotFoundException {

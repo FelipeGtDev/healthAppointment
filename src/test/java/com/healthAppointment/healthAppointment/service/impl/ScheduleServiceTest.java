@@ -4,6 +4,8 @@ import com.healthAppointment.healthAppointment.exceptions.BusException;
 import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.Schedule;
+import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
+import com.healthAppointment.healthAppointment.model.dto.PatientReducedDTO;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
 import com.healthAppointment.healthAppointment.repository.ScheduleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,13 +30,14 @@ class ScheduleServiceTest {
 
     private ScheduleDTO scheduleDtoWhitOnePatient;
     private ScheduleDTO scheduleDTOWhitMultiplePatients;
-    private Schedule scheduleWhitOnePatient;
-    private Schedule scheduleWhitMultiplePatients;
+    private Schedule scheduleWithOnePatient;
+    private Schedule scheduleWithMultiplePatients;
     @Mock
     private ScheduleRepository repository;
     @Mock
     private ModelMapper modelMapper;
-
+    @Mock
+    private PatientService patientService;
     @InjectMocks
     private ScheduleService service;
 
@@ -48,8 +51,8 @@ class ScheduleServiceTest {
     @BeforeEach
     void setUp() throws ParseException {
         // Objects
-        scheduleWhitOnePatient = utils.createScheduleWhithOnePatient();
-        scheduleWhitMultiplePatients = utils.createScheduleWhithMultiplePatients();
+        scheduleWithOnePatient = utils.createScheduleWhithOnePatient();
+        scheduleWithMultiplePatients = utils.createScheduleWhithMultiplePatients();
         // DTOs
         scheduleDtoWhitOnePatient = utils.createScheduleDtoWhithOnePatient();
         scheduleDTOWhitMultiplePatients = utils.createScheduleDtoWhithMultiplePatients();
@@ -63,8 +66,8 @@ class ScheduleServiceTest {
     void save_shouldReturnScheduleWhitOnePatient() throws BusException {
 
         //Arrange
-        when(repository.save(any())).thenReturn(scheduleWhitOnePatient);
-        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitOnePatient);
+        when(repository.save(any())).thenReturn(scheduleWithOnePatient);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWithOnePatient);
         when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDtoWhitOnePatient);
 
         // Act
@@ -87,7 +90,7 @@ class ScheduleServiceTest {
 
         //Arrange
         var scheduleDtoWithoutPatient = new ScheduleDTO(scheduleDtoWhitOnePatient);
-        var scheduleWithoutPatient = new Schedule(scheduleWhitOnePatient);
+        var scheduleWithoutPatient = new Schedule(scheduleWithOnePatient);
         scheduleWithoutPatient.setPatients(null);
         scheduleDtoWithoutPatient.setPatients(null);
         when(repository.save(any())).thenReturn(scheduleWithoutPatient);
@@ -111,9 +114,9 @@ class ScheduleServiceTest {
     @Test
     void save_shouldThrowExceptionWhenTryCreateMultiplePatientsScheduleInNotPilatesSchedule() {
         //Arrange
-        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitMultiplePatients);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWithMultiplePatients);
         when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDTOWhitMultiplePatients);
-        scheduleWhitMultiplePatients.setHealthProcedure(utils.createQualificationPhisioterapy());
+        scheduleWithMultiplePatients.setHealthProcedure(utils.createQualificationPhisioterapy());
 
         // Act & Assert
         var exc = assertThrows(BusException.class, () -> service.save(scheduleDTOWhitMultiplePatients));
@@ -126,9 +129,9 @@ class ScheduleServiceTest {
         for (int i = 0; i < 5; i++) {
             var p = new Patient();
             p.setId(String.valueOf((i + 3)));
-            scheduleWhitMultiplePatients.getPatients().add(p);
+            scheduleWithMultiplePatients.getPatients().add(p);
         }
-        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitMultiplePatients);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWithMultiplePatients);
         when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDTOWhitMultiplePatients);
 
         // Act & Assert
@@ -139,7 +142,7 @@ class ScheduleServiceTest {
     @Test
     void save_shouldThrowExceptionWhenTryCreateScheduleWithAnExistingDateTimeAndPratictioner() {
         //Arrange
-        when(repository.findScheduleByDateTimeAndPratictionerId(any(), any())).thenReturn(Optional.ofNullable(scheduleWhitOnePatient));
+        when(repository.findScheduleByDateTimeAndPratictionerId(any(), any())).thenReturn(Optional.ofNullable(scheduleWithOnePatient));
 
         // Act & Assert
         var exc = assertThrows(BusException.class, () -> service.save(scheduleDTOWhitMultiplePatients));
@@ -149,10 +152,10 @@ class ScheduleServiceTest {
     @Test
     void save_shouldThrowExceptionWhenTryCreateScheduleWithDuplicatePatient() {
         //Arrange
-        scheduleWhitMultiplePatients.getPatients().add(scheduleWhitMultiplePatients.getPatients().get(0));
+        scheduleWithMultiplePatients.getPatients().add(scheduleWithMultiplePatients.getPatients().get(0));
         scheduleDTOWhitMultiplePatients.getPatients().add(scheduleDTOWhitMultiplePatients.getPatients().get(0));
-        when(repository.save(any())).thenReturn(scheduleWhitMultiplePatients);
-        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitMultiplePatients);
+        when(repository.save(any())).thenReturn(scheduleWithMultiplePatients);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWithMultiplePatients);
 
         // Act & Assert
         var exc = assertThrows(BusException.class, () -> service.save(scheduleDTOWhitMultiplePatients));
@@ -165,9 +168,9 @@ class ScheduleServiceTest {
     void findAllByDate_ShouldThrowExceptionIfReturnsMoreThanOneDate() {
         //Arrange
         List<Schedule> lista = new ArrayList<>();
-        scheduleWhitMultiplePatients.setDateTime(LocalDateTime.now());
-        lista.add(scheduleWhitMultiplePatients);
-        lista.add(scheduleWhitOnePatient);
+        scheduleWithMultiplePatients.setDateTime(LocalDateTime.now());
+        lista.add(scheduleWithMultiplePatients);
+        lista.add(scheduleWithOnePatient);
         when(repository.findScheduleAllByDateTime_Date(LocalDate.now(), LocalDate.now().plusDays(1))).thenReturn(lista);
 
         // Act & Assert
@@ -176,14 +179,20 @@ class ScheduleServiceTest {
 
     // ##################### ADD PATIENT IN SCHEDULE #####################
 
-    // sucesso
-
     @Test
-    void addPatient_shouldReturnScheduleWhitOnePatient() throws BusException, ResourceNotFoundException {
+    void addPatient_shouldReturnScheduleWhitPatientAdded() throws BusException, ResourceNotFoundException, ParseException {
         //Arrange
-        when(repository.findById(any())).thenReturn(Optional.ofNullable(scheduleWhitOnePatient));
-        when(repository.save(any())).thenReturn(scheduleWhitOnePatient);
-        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWhitOnePatient);
+        var scheduleDtoWithoutPatient = new ScheduleDTO(scheduleDtoWhitOnePatient);
+        var scheduleWithoutPatient = new Schedule(scheduleWithOnePatient);
+        scheduleWithoutPatient.setPatients(null);
+        scheduleDtoWithoutPatient.setPatients(null);
+        when(repository.findById(anyString())).thenReturn(Optional.of(scheduleWithoutPatient));
+        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+        when(modelMapper.map(any(PatientDTO.class), eq(PatientReducedDTO.class))).thenReturn(
+                utils.createPatientReducedDTO(utils.createPatient1()));
+        when(modelMapper.map(any(PatientReducedDTO.class), eq(Patient.class))).thenReturn(utils.createPatient1());
+        when(repository.save(any())).thenReturn(scheduleWithOnePatient);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWithoutPatient);
         when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDtoWhitOnePatient);
 
         // Act
@@ -192,26 +201,69 @@ class ScheduleServiceTest {
         // Assert
         assertNotNull(result);
 
-        assertEquals(scheduleDtoWhitOnePatient.getPratictioner(), result.getPratictioner());
-        assertEquals(scheduleDtoWhitOnePatient.getDateTime(), result.getDateTime());
-        assertEquals(scheduleDtoWhitOnePatient.getPatients().size(), result.getPatients().size());
-        assertEquals(scheduleDtoWhitOnePatient.getPatients().get(0), result.getPatients().get(0));
-        assertEquals(scheduleDtoWhitOnePatient.getHealthProcedure(), result.getHealthProcedure());
+        assertEquals(scheduleDtoWithoutPatient.getPratictioner(), result.getPratictioner());
+        assertEquals(scheduleDtoWithoutPatient.getDateTime(), result.getDateTime());
+        assertTrue(result.getPatients().size() > 0);
+        assertEquals(scheduleDtoWithoutPatient.getHealthProcedure(), result.getHealthProcedure());
 
         verify(repository, times(1)).save(any());
     }
 
     // deve retornar exceção se não encontrar agendamento
+    @Test
+    void addPatient_shouldThrowExceptionWhenTryAddPatientInScheduleThatNotExists() {
+        //Arrange
+        when(repository.findById(anyString())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        var exc = assertThrows(ResourceNotFoundException.class, () -> service.addPatient("id", "patientId"));
+        assertEquals(SCHEDULE_NOT_FOUND, exc.getMessage());
+    }
 
     // deve retornar exceção se não encontrar paciente
+    @Test
+    void addPatient_shouldThrowExceptionWhenTryAddPatientThatNotExists() {
+        //Arrange
+        when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithOnePatient));
+        when(patientService.findById(anyString())).thenReturn(null);
+
+        // Act & Assert
+        var exc = assertThrows(ResourceNotFoundException.class, () -> service.addPatient("id", "patientId"));
+        assertEquals(PATIENT_NOT_FOUND, exc.getMessage());
+    }
 
     // deve retornar exceção se agendamento estiver cheio
+    @Test
+    void addPatient_shouldThrowExceptionWhenTryAddPatientInScheduleThatIsFull() {
+        //Arrange
+        when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithOnePatient));
+        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+
+        // Act & Assert
+        var exc = assertThrows(BusException.class, () -> service.addPatient("id", "patientId"));
+        assertEquals(SCHEDULE_PATIENTS_FULL, exc.getMessage());
+    }
 
     // deve retornar exceção se paciente já estiver no agendamento
+    @Test
+    void addPatient_shouldThrowExceptionWhenTryAddPatientThatAlreadyExistsInSchedule() throws ParseException {
+        //Arrange
+        when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithMultiplePatients));
+        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+
+        when(modelMapper.map(any(PatientDTO.class), eq(PatientReducedDTO.class))).thenReturn(
+                utils.createPatientReducedDTO(utils.createPatient1()));
+        when(modelMapper.map(any(PatientReducedDTO.class), eq(Patient.class))).thenReturn(utils.createPatient1());
+
+        // Act & Assert
+        var exc = assertThrows(BusException.class, () -> service.addPatient("id", "1"));
+        assertEquals(DUPLICATE_PATIENT, exc.getMessage());
+    }
 
     // ##################### REMOVE PATIENT IN SCHEDULE #####################
 
     // sucesso
+
 
     // deve retornar exceção se não encontrar agendamento
 
