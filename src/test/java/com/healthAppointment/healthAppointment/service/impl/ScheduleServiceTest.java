@@ -263,14 +263,59 @@ class ScheduleServiceTest {
     // ##################### REMOVE PATIENT IN SCHEDULE #####################
 
     // sucesso
+    @Test
+    void removePatient_shouldReturnScheduleWhitPatientRemoved() throws BusException, ResourceNotFoundException, ParseException {
+        //Arrange
+        var scheduleDtoWithoutPatient = new ScheduleDTO(scheduleDtoWhitOnePatient);
+        var scheduleWithoutPatient = new Schedule(scheduleWithOnePatient);
+        scheduleWithoutPatient.setPatients(null);
+        scheduleDtoWithoutPatient.setPatients(null);
+        when(repository.findById(anyString())).thenReturn(Optional.of(scheduleWithOnePatient));
+        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+        when(modelMapper.map(any(PatientDTO.class), eq(PatientReducedDTO.class))).thenReturn(
+                utils.createPatientReducedDTO(utils.createPatient1()));
+        when(modelMapper.map(any(PatientReducedDTO.class), eq(Patient.class))).thenReturn(utils.createPatient1());
+        when(repository.save(any())).thenReturn(scheduleWithoutPatient);
+        when(modelMapper.map(any(ScheduleDTO.class), eq(Schedule.class))).thenReturn(scheduleWithOnePatient);
+        when(modelMapper.map(any(Schedule.class), eq(ScheduleDTO.class))).thenReturn(scheduleDtoWithoutPatient);
 
+        // Act
+        var result = service.removePatient("id", "1");
+
+        // Assert
+        assertNotNull(result);
+
+        assertEquals(scheduleDtoWithoutPatient.getPratictioner(), result.getPratictioner());
+        assertEquals(scheduleDtoWithoutPatient.getDateTime(), result.getDateTime());
+        assertTrue(result.getPatients() == null || result.getPatients().size() == 0);
+        assertEquals(scheduleDtoWithoutPatient.getHealthProcedure(), result.getHealthProcedure());
+
+        verify(repository, times(1)).save(any());
+    }
 
     // deve retornar exceção se não encontrar agendamento
+    @Test
+    void removePatient_shouldThrowExceptionWhenTryRemovePatientInScheduleThatNotExists() {
+        //Arrange
+        when(repository.findById(anyString())).thenReturn(Optional.empty());
+
+        // Act & Assert
+        var exc = assertThrows(ResourceNotFoundException.class, () -> service.removePatient("id", "patientId"));
+        assertEquals(SCHEDULE_NOT_FOUND, exc.getMessage());
+    }
 
     // deve retornar exceção se não encontrar paciente
+    @Test
+    void removePatient_shouldThrowExceptionWhenTryRemovePatientThatNotExists() {
+        //Arrange
+        when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithOnePatient));
+        when(patientService.findById(anyString())).thenReturn(null);
 
+        // Act & Assert
+        var exc = assertThrows(ResourceNotFoundException.class, () -> service.removePatient("id", "patientId"));
+        assertEquals(PATIENT_NOT_FOUND, exc.getMessage());
+    }
 
-    // ##################### UPDATE #####################
 
     // ##################### FIND BY DATE #####################
 
@@ -279,4 +324,7 @@ class ScheduleServiceTest {
     // deve retornar exceção se não encontrar nenhum agendamento
 
     // deve retornar exceção se data do agendamento for anterior a data atual
+
+    // ##################### UPDATE #####################
+
 }
