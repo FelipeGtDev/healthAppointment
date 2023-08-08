@@ -16,5 +16,5 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     Optional<Schedule> findScheduleByDateTimeAndPratictionerId(LocalDateTime dateTime, String praticioterId);
 
     @Query("{ 'dateTime' : {$gte: ?0, $lte: ?1 }}")
-    List<Schedule> findScheduleAllByDateTime_Date(LocalDate startDate, LocalDate endDate);
+    List<Schedule> findByDateTimeBetween(LocalDate startDate, LocalDate endDate);
 }

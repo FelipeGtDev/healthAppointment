@@ -54,7 +54,7 @@ public class ScheduleService implements IScheduleService {
         var startDate = date.isEmpty() ? LocalDate.now() : LocalDate.parse(date, DateTimeFormatter.ofPattern(PATERN_DATE));
         var endDate = startDate.plusDays(1);
 
-        List<Schedule> response = repository.findScheduleAllByDateTime_Date(startDate, endDate);
+        List<Schedule> response = repository.findByDateTimeBetween(startDate, endDate);
         response.sort(Comparator.comparing(Schedule::getDateTime));
         try {
             validateUnicDate(response);
@@ -175,7 +175,7 @@ public class ScheduleService implements IScheduleService {
         if (response.size() > 0) {
             LocalDate date = response.get(0).getDateTime().toLocalDate();
             response.forEach(schedule -> {
-                assert (!schedule.getDateTime().toLocalDate().equals(date));
+                assert (schedule.getDateTime().toLocalDate().equals(date));
             });
         }
     }
