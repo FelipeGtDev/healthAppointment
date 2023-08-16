@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.controller;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.dto.RegulatoryAgencyDTO;
 import com.healthAppointment.healthAppointment.model.enums.StateAcronym;
 import com.healthAppointment.healthAppointment.service.IRegulatoryAgencyService;
@@ -30,6 +31,10 @@ public class RegulatoryAgencyController {
             return ResponseEntity.badRequest()
                     .body("Erro ao salvar Agência Reguladora: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.badRequest()
+                    .body("Erro ao salvar Agência Reguladora: " + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
         }
     }
 
@@ -52,7 +57,7 @@ public class RegulatoryAgencyController {
     public ResponseEntity<Page<?>> findByQualificationAndState(
             @RequestParam("qualificationCode") String qualificationCode,
             @RequestParam("state") StateAcronym state,
-            @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
+            @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) throws ResourceNotFoundException {
 
         Page<RegulatoryAgencyDTO> response = service.findByQualificationAndState(qualificationCode,state, page);
         return ResponseEntity.ok(response);

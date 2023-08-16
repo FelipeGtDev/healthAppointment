@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import org.springframework.data.domain.Page;
@@ -17,13 +18,13 @@ public interface IPatientService {
 
     Page<PatientDTO> findAll(Pageable page);
 
-    PatientDTO getById(String id);
+    PatientDTO getById(String id) throws ResourceNotFoundException;
 
-    Optional<Patient> findById(String id);
+    Optional<Patient> findById(String id) throws ResourceNotFoundException;
 
     Page<PatientDTO> findByName(String name, Pageable page);
 
-    PatientDTO update(String id, PatientDTO request) throws Exception;
+    PatientDTO update(String id, PatientDTO request) throws  ResourceNotFoundException;
 
-    void delete(String id) throws Exception;
+    void delete(String id) throws  ResourceNotFoundException;
 }

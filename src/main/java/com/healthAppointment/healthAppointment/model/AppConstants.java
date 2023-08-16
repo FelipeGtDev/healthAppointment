@@ -7,7 +7,14 @@ public class AppConstants {
         public static final String DELETE_ERROR = "Erro ao excluir! ";
 
         // #################### PATIENT ####################
-        public static final String PATIENT_NOT_FOUND = "Paciente não encontrado.";
+        public static final String PATIENT_NOT_FOUND = "Paciente não encontrado. Id: ";
+
+        // #################### PRATICTIONER ####################
+        public static final String PRATICTIONER_NOT_FOUND = "Profissional não encontrado. Id: ";
+
+
+        // #################### QUALIFICATION ####################
+        public static final String QUALIFICATION_NOT_FOUND = "Qualificação não encontrada. Id: ";
 
 
         // #################### SCHEDULE ####################

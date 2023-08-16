@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.repository.PatientRepository;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.PATIENT_NOT_FOUND;
 
 @Service
 public class PatientService implements IPatientService {
@@ -51,15 +54,19 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PatientDTO getById(String id)  {
+    public PatientDTO getById(String id) throws ResourceNotFoundException {
         Optional<Patient> responseOp = findById(id);
         return responseOp.map(this::buildPatientDTO).orElse(null);
     }
 
     @Override
-    public Optional<Patient> findById(String id)  {
-        return repository.findById(id);
-        
+    public Optional<Patient> findById(String id) throws ResourceNotFoundException {
+
+        Optional<Patient> responseOp = repository.findById(id);
+        if (responseOp.isEmpty()) {
+            throw new ResourceNotFoundException(PATIENT_NOT_FOUND + id);
+        }
+        return responseOp;
     }
 
     @Override
@@ -69,22 +76,18 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PatientDTO update(String id, PatientDTO request) throws Exception {
-        Optional<Patient> responseOp = repository.findById(id);
-        if (responseOp.isEmpty()) {
-            throw new Exception("Paciente não encontrado");
-        }
+    public PatientDTO update(String id, PatientDTO request) throws ResourceNotFoundException {
+        Optional<Patient> responseOp = findById(id);
+
         Patient patient = buildPatient(request);
         patient = repository.save(patient);
         return buildPatientDTO(patient);
     }
 
     @Override
-    public void delete(String id) throws Exception {
-        Optional<Patient> responseOp = repository.findById(id);
-        if (responseOp.isEmpty()) {
-            throw new Exception("Paciente não encontrado");
-        }
+    public void delete(String id) throws ResourceNotFoundException {
+        Optional<Patient> responseOp = findById(id);
+
         repository.delete(responseOp.get());
     }
 

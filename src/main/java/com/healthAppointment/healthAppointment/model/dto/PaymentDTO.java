@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,8 +16,11 @@ import java.util.Date;
 public class PaymentDTO {
     private String id;
     private PaymentMethod paymentMethod;
+    private Double amount;
     private Boolean paymentSucceeded;
     private Date paymentDate;
-    private PatientDTO patient;
-    private AppointmentDTO appointment;
+    private List<AppointmentReducedDTO> appointments;
+    private Integer balance;
+    private Integer appointmentsPayed;
+
 }

@@ -187,7 +187,7 @@ class ScheduleServiceTest {
         scheduleWithoutPatient.setPatients(null);
         scheduleDtoWithoutPatient.setPatients(null);
         when(repository.findById(anyString())).thenReturn(Optional.of(scheduleWithoutPatient));
-        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+        when(patientService.getById(anyString())).thenReturn(utils.createPatientDTO1());
         when(modelMapper.map(any(PatientDTO.class), eq(PatientReducedDTO.class))).thenReturn(
                 utils.createPatientReducedDTO(utils.createPatient1()));
         when(modelMapper.map(any(PatientReducedDTO.class), eq(Patient.class))).thenReturn(utils.createPatient1());
@@ -222,10 +222,10 @@ class ScheduleServiceTest {
 
     // deve retornar exceção se não encontrar paciente
     @Test
-    void addPatient_shouldThrowExceptionWhenTryAddPatientThatNotExists() {
+    void addPatient_shouldThrowExceptionWhenTryAddPatientThatNotExists() throws ResourceNotFoundException {
         //Arrange
         when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithOnePatient));
-        when(patientService.findById(anyString())).thenReturn(null);
+        when(patientService.getById(anyString())).thenReturn(null);
 
         // Act & Assert
         var exc = assertThrows(ResourceNotFoundException.class, () -> service.addPatient("id", "patientId"));
@@ -234,10 +234,10 @@ class ScheduleServiceTest {
 
     // deve retornar exceção se agendamento estiver cheio
     @Test
-    void addPatient_shouldThrowExceptionWhenTryAddPatientInScheduleThatIsFull() {
+    void addPatient_shouldThrowExceptionWhenTryAddPatientInScheduleThatIsFull() throws ResourceNotFoundException {
         //Arrange
         when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithOnePatient));
-        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+        when(patientService.getById(anyString())).thenReturn(utils.createPatientDTO1());
 
         // Act & Assert
         var exc = assertThrows(BusException.class, () -> service.addPatient("id", "patientId"));
@@ -246,10 +246,10 @@ class ScheduleServiceTest {
 
     // deve retornar exceção se paciente já estiver no agendamento
     @Test
-    void addPatient_shouldThrowExceptionWhenTryAddPatientThatAlreadyExistsInSchedule() throws ParseException {
+    void addPatient_shouldThrowExceptionWhenTryAddPatientThatAlreadyExistsInSchedule() throws ParseException, ResourceNotFoundException {
         //Arrange
         when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithMultiplePatients));
-        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+        when(patientService.getById(anyString())).thenReturn(utils.createPatientDTO1());
 
         when(modelMapper.map(any(PatientDTO.class), eq(PatientReducedDTO.class))).thenReturn(
                 utils.createPatientReducedDTO(utils.createPatient1()));
@@ -271,7 +271,7 @@ class ScheduleServiceTest {
         scheduleWithoutPatient.setPatients(null);
         scheduleDtoWithoutPatient.setPatients(null);
         when(repository.findById(anyString())).thenReturn(Optional.of(scheduleWithOnePatient));
-        when(patientService.findById(anyString())).thenReturn(utils.createPatientDTO1());
+        when(patientService.getById(anyString())).thenReturn(utils.createPatientDTO1());
         when(modelMapper.map(any(PatientDTO.class), eq(PatientReducedDTO.class))).thenReturn(
                 utils.createPatientReducedDTO(utils.createPatient1()));
         when(modelMapper.map(any(PatientReducedDTO.class), eq(Patient.class))).thenReturn(utils.createPatient1());
@@ -306,10 +306,10 @@ class ScheduleServiceTest {
 
     // deve retornar exceção se não encontrar paciente
     @Test
-    void removePatient_shouldThrowExceptionWhenTryRemovePatientThatNotExists() {
+    void removePatient_shouldThrowExceptionWhenTryRemovePatientThatNotExists() throws ResourceNotFoundException {
         //Arrange
         when(repository.findById(anyString())).thenReturn(Optional.ofNullable(scheduleWithOnePatient));
-        when(patientService.findById(anyString())).thenReturn(null);
+        when(patientService.getById(anyString())).thenReturn(null);
 
         // Act & Assert
         var exc = assertThrows(ResourceNotFoundException.class, () -> service.removePatient("id", "patientId"));

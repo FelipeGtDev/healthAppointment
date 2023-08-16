@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.repository.PatientRepository;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.PATIENT_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -149,7 +151,7 @@ class PatientServiceTest {
     }
 
     @Test
-    void findById_shouldReturnPatientDTO() {
+    void findById_shouldReturnPatientDTO() throws ResourceNotFoundException {
         // Arrange
         String id = "1";
         Patient patient = new Patient();
@@ -167,17 +169,18 @@ class PatientServiceTest {
         verify(repository, times(1)).findById(id);
     }
 
-//    @Test
-//    void findById_shouldThrowExceptionWhenPatientNotFound() {
-//        // Arrange
-//        String id = "1";
-//
-//        when(repository.findById(id)).thenReturn(Optional.empty());
-//
-//        // Act & Assert
-//        assertThrows(Exception.class, () -> patientService.findById(id));
-//        verify(repository, times(1)).findById(id);
-//    }
+    @Test
+    void findById_shouldThrowExceptionWhenPatientNotFound() {
+        // Arrange
+        String id = "1";
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        var exc = assertThrows(ResourceNotFoundException.class, () -> patientService.findById(id));
+        assertEquals(PATIENT_NOT_FOUND + id, exc.getMessage());
+        verify(repository, times(1)).findById(id);
+    }
 
     @Test
     void findByName_shouldReturnPatientDTOPage() {
@@ -200,7 +203,7 @@ class PatientServiceTest {
     }
 
     @Test
-    void update_shouldReturnUpdatedPatientDTO() throws Exception {
+    void update_shouldReturnUpdatedPatientDTO() throws ResourceNotFoundException {
         // Arrange
         String id = "1";
         PatientDTO request = new PatientDTO();
@@ -232,12 +235,12 @@ class PatientServiceTest {
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(Exception.class, () -> patientService.update(id, request));
+        assertThrows(ResourceNotFoundException.class, () -> patientService.update(id, request));
         verify(repository, times(1)).findById(id);
     }
 
     @Test
-    void delete_shouldDeletePatient() throws Exception {
+    void delete_shouldDeletePatient() throws ResourceNotFoundException {
         // Arrange
         String id = "1";
         Patient patient = new Patient();
@@ -260,7 +263,7 @@ class PatientServiceTest {
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(Exception.class, () -> patientService.delete(id));
+        assertThrows(ResourceNotFoundException.class, () -> patientService.delete(id));
         verify(repository, times(1)).findById(id);
     }
 

@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Qualification;
 import com.healthAppointment.healthAppointment.model.dto.QualificationDTO;
 import com.healthAppointment.healthAppointment.model.dto.QualificationReducedDTO;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.QUALIFICATION_NOT_FOUND;
 
 @Service
 public class QualificationService implements IQualificationService {
@@ -54,8 +57,12 @@ public class QualificationService implements IQualificationService {
     }
 
     @Override
-    public Qualification findByCode(String code) {
-        return repository.findByCode(code);
+    public Qualification findByCode(String code) throws ResourceNotFoundException {
+        Optional<Qualification> responseOp = repository.findQualificationByCode(code);
+        if (responseOp.isEmpty()) {
+            throw new ResourceNotFoundException(QUALIFICATION_NOT_FOUND + code);
+        }
+        return responseOp.get();
     }
 
     @Override

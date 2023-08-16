@@ -1,8 +1,12 @@
 package com.healthAppointment.healthAppointment.service;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
+import com.healthAppointment.healthAppointment.model.Pratictioner;
 import com.healthAppointment.healthAppointment.model.dto.PratictionerDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 public interface IPratictionerService {
     PratictionerDTO save(PratictionerDTO request);
@@ -13,7 +17,9 @@ public interface IPratictionerService {
 
     Page<PratictionerDTO> findAll(Pageable page);
 
-    PratictionerDTO findById(String id) throws Exception;
+    PratictionerDTO getById(String id) throws Exception, ResourceNotFoundException;
+
+    Optional<Pratictioner> findById(String id) throws Exception, ResourceNotFoundException;
 
     Page<PratictionerDTO> findByName(String name, Pageable page);
 

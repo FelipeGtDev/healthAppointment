@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,8 +18,10 @@ import java.util.Date;
 public class Payment {
     private String id;
     private PaymentMethod paymentMethod;
+    private Double amount;
     private Boolean paymentSucceeded;
     private Date paymentDate;
-    private Patient patient;
-    private Appointment appointment;
+    private List<Appointment> appointments;
+    private Integer balance;
+    private Integer appointmentsPayed;
 }

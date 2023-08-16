@@ -1,8 +1,8 @@
 package com.healthAppointment.healthAppointment.controller;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.dto.PratictionerDTO;
 import com.healthAppointment.healthAppointment.service.IPratictionerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,7 +17,6 @@ public class PratictionerController {
 
     private final IPratictionerService service;
 
-    @Autowired
     PratictionerController(IPratictionerService service) {
         this.service = service;
     }
@@ -55,9 +54,13 @@ public class PratictionerController {
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") String id) {
         try {
-            PratictionerDTO response = service.findById(id);
+            PratictionerDTO response = service.getById(id);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Erro ao buscar Profissional: " + e.getMessage()
+                            .replace("java.lang.Exception: ", ""));
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao buscar Profissional: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
@@ -67,7 +70,7 @@ public class PratictionerController {
     @GetMapping("/listByName")
     public ResponseEntity<Page<?>> findByname(
             @RequestParam("name") String name,
-            @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page){
+            @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
         Page<PratictionerDTO> response = service.findByName(name, page);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

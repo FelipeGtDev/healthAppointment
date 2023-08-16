@@ -74,7 +74,7 @@ public class ScheduleService implements IScheduleService {
     @Override
     public ScheduleDTO addPatient(String id, String patientId) throws BusException, ResourceNotFoundException {
         Optional<Schedule> schedule = repository.findById(id);
-        Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.findById(patientId));
+        Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.getById(patientId));
 
         areScheduleAndPatientPresent(schedule, patientDTO);
 
@@ -136,7 +136,7 @@ public class ScheduleService implements IScheduleService {
     @Override
     public ScheduleDTO removePatient(String id, String patientId) throws ResourceNotFoundException, BusException {
         Optional<Schedule> schedule = repository.findById(id);
-        Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.findById(patientId));
+        Optional<PatientDTO> patientDTO = Optional.ofNullable(patientService.getById(patientId));
         areScheduleAndPatientPresent(schedule, patientDTO);
 
         var request = schedule.get();

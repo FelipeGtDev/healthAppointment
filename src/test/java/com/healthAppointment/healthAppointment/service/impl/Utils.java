@@ -3,13 +3,16 @@ package com.healthAppointment.healthAppointment.service.impl;
 import com.healthAppointment.healthAppointment.model.*;
 import com.healthAppointment.healthAppointment.model.dto.*;
 import com.healthAppointment.healthAppointment.model.enums.Gender;
+import com.healthAppointment.healthAppointment.model.enums.PaymentMethod;
 import com.healthAppointment.healthAppointment.model.enums.StateAcronym;
 import org.modelmapper.ModelMapper;
 
 import java.text.ParseException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -222,4 +225,70 @@ public class Utils {
 
         return scheduleDTO;
     }
+
+    // ############################### APPOINTMENT ##########################################
+
+    public AppointmentDTO createAppointmentDto1DONE() throws ParseException {
+        var appointment = new AppointmentDTO();
+
+        appointment.setId("1");
+        appointment.setDateTime("2023-12-01T08:00:00");
+        appointment.setPratictioner(createPratictionerReducedDTO1());
+        appointment.setPatient(createPatientReducedDTO(createPatient1()));
+        appointment.setHealthProcedure(createQualificationReducedDTO(createQualificationPhisioterapy()));
+        appointment.setProcedureStatus(ProcedureStatus.DONE);
+
+        return appointment;
+
+    }
+    public AppointmentDTO createAppointmentDto2DONE() throws ParseException {
+        var appointment = new AppointmentDTO();
+
+        appointment.setId("2");
+        appointment.setDateTime("2023-12-01T08:00:00");
+        appointment.setPratictioner(createPratictionerReducedDTO1());
+        appointment.setPatient(createPatientReducedDTO(createPatient2()));
+        appointment.setHealthProcedure(createQualificationReducedDTO(createQualificationPhisioterapy()));
+        appointment.setProcedureStatus(ProcedureStatus.DONE);
+
+        return appointment;
+
+    }
+
+    public Appointment createAppointment(AppointmentDTO appointmentDTO) throws ParseException {
+        return modelMapper.map(appointmentDTO, Appointment.class);
+    }
+
+    public AppointmentReducedDTO createAppointmentReducedDTO(Appointment appointment) throws ParseException {
+        return modelMapper.map(appointment, AppointmentReducedDTO.class);
+    }
+
+    // ############################### PAYMENT ##########################################
+
+
+    public PaymentDTO createPaymentPayedDto() throws ParseException {
+        var payment = new PaymentDTO();
+
+        payment.setId("1");
+        payment.setPaymentMethod(PaymentMethod.PIX);
+        payment.setAmount(140.0);
+        payment.setPaymentSucceeded(true);
+        payment.setPaymentDate(Date.from(Instant.now()));
+        payment.setAppointments(new ArrayList<>(List.of(
+                createAppointmentReducedDTO(createAppointment(createAppointmentDto1DONE())))));
+        payment.setBalance(3);
+        payment.setAppointmentsPayed(8);
+
+        return payment;
+    }
+
+    public Payment createPaymentPayed(PaymentDTO paymentDTO) throws ParseException {
+        return modelMapper.map(paymentDTO, Payment.class);
+    }
+
+    public PaymentReducedDTO createPaymentReducedDTO(Payment payment) throws ParseException {
+        return modelMapper.map(payment, PaymentReducedDTO.class);
+    }
+
+
 }

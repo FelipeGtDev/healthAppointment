@@ -12,11 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AppointmentDTO {
     private String id;
-    private String date;
-    private String time;
+    private String dateTime;
     private PratictionerReducedDTO pratictioner;
     private QualificationReducedDTO healthProcedure;
     private ProcedureStatus procedureStatus;
     private PatientReducedDTO patient;
-    private PaymentDTO payment;
+    private PaymentReducedDTO payment;
 }

@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Qualification;
 import com.healthAppointment.healthAppointment.model.RegulatoryAgency;
 import com.healthAppointment.healthAppointment.model.dto.RegulatoryAgencyDTO;
@@ -26,7 +27,7 @@ public class RegulatoryAgencyService implements IRegulatoryAgencyService {
         this.modelMapper = modelMapper;
     }
     @Override
-    public RegulatoryAgencyDTO save(RegulatoryAgencyDTO request) {
+    public RegulatoryAgencyDTO save(RegulatoryAgencyDTO request) throws ResourceNotFoundException {
 
         RegulatoryAgency agency = buildRegulatoryAgency(request);
         Optional<RegulatoryAgency> response = Optional.of(repository.save(agency));
@@ -53,7 +54,7 @@ public class RegulatoryAgencyService implements IRegulatoryAgencyService {
 
     @Override
     public Page<RegulatoryAgencyDTO> findByQualificationAndState(String qualificationCode
-            , StateAcronym state, Pageable page) {
+            , StateAcronym state, Pageable page) throws ResourceNotFoundException {
         Optional<Qualification> qualification = Optional.ofNullable(qualificationService.findByCode(qualificationCode));
         if (qualification.isPresent()) {
             if (qualification.get().getTypes().isEmpty()){
@@ -73,7 +74,7 @@ public class RegulatoryAgencyService implements IRegulatoryAgencyService {
         return modelMapper.map(regulatoryAgency, RegulatoryAgencyDTO.class);
     }
 
-    private RegulatoryAgency buildRegulatoryAgency(RegulatoryAgencyDTO request) {
+    private RegulatoryAgency buildRegulatoryAgency(RegulatoryAgencyDTO request) throws ResourceNotFoundException {
         RegulatoryAgency agency = modelMapper.map(request, RegulatoryAgency.class);
 
         String relatedQualificationCode = request.getQualification().getCode();

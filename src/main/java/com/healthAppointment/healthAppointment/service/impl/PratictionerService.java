@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Pratictioner;
 import com.healthAppointment.healthAppointment.model.Qualification;
 import com.healthAppointment.healthAppointment.model.RegulatoryAgency;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.PRATICTIONER_NOT_FOUND;
 
 
 @Service
@@ -81,12 +84,19 @@ public class PratictionerService implements IPratictionerService {
     }
 
     @Override
-    public PratictionerDTO findById(String id) throws Exception {
+    public PratictionerDTO getById(String id) throws ResourceNotFoundException {
+        Optional<Pratictioner> responseOp = findById(id);
+
+        return buildPratictionerDTO(responseOp.get());
+    }
+
+    @Override
+    public Optional<Pratictioner> findById(String id) throws ResourceNotFoundException {
         Optional<Pratictioner> responseOp = repository.findById(id);
         if (responseOp.isEmpty()) {
-            throw new Exception("Profissional não encontrado");
+            throw new ResourceNotFoundException(PRATICTIONER_NOT_FOUND + id);
         }
-        return buildPratictionerDTO(responseOp.get());
+        return responseOp;
     }
 
     @Override

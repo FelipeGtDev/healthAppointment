@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Qualification;
 import com.healthAppointment.healthAppointment.model.dto.QualificationDTO;
 import com.healthAppointment.healthAppointment.model.dto.QualificationReducedDTO;
@@ -13,7 +14,7 @@ public interface IQualificationService {
 
     List<Qualification> findByCodeList(List<String> codes);
 
-    Qualification findByCode(String code);
+    Qualification findByCode(String code) throws ResourceNotFoundException;
 
     List<QualificationReducedDTO> listByType(String typeCode);
 

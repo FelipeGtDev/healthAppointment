@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface QualificationRepository extends MongoRepository<Qualification, String> {
@@ -15,6 +16,8 @@ public interface QualificationRepository extends MongoRepository<Qualification, 
 
     @Query("{ 'code' : ?0 }")
     Qualification findByCode(String code);
+
+    Optional<Qualification> findQualificationByCode(String code);
 
     @Query("{ 'types.code' : ?0 }")
     List<Qualification> listByType(String code);

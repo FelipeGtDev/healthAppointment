@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.controller;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.service.IPatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class PatientController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") String id) {
+    public ResponseEntity<?> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
         PatientDTO response = service.getById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -74,6 +75,8 @@ public class PatientController {
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -82,7 +85,7 @@ public class PatientController {
         try {
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

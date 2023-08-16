@@ -1,7 +1,9 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Qualification;
+import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.model.dto.QualificationDTO;
 import com.healthAppointment.healthAppointment.repository.QualificationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,9 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.QUALIFICATION_NOT_FOUND;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 class QualificationServiceTest {
 
@@ -97,4 +101,18 @@ class QualificationServiceTest {
     }
 
     // Adicione mais testes para outros métodos, se necessário...
+
+
+    @Test
+    void  findByCode_shouldThrowExceptionWhenQUalificationNotFound() {
+        // Arrange
+        String code = "1";
+
+        when(repository.findQualificationByCode(code)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        var exc = assertThrows(ResourceNotFoundException.class, () -> service.findByCode(code));
+        assertEquals(QUALIFICATION_NOT_FOUND + code, exc.getMessage());
+        verify(repository, times(1)).findQualificationByCode(code);
+    }
 }

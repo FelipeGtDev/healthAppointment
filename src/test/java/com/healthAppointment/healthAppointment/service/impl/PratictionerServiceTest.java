@@ -1,5 +1,6 @@
 package com.healthAppointment.healthAppointment.service.impl;
 
+import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.Pratictioner;
 import com.healthAppointment.healthAppointment.model.Qualification;
 import com.healthAppointment.healthAppointment.model.RegulatoryAgency;
@@ -23,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.PRATICTIONER_NOT_FOUND;
 
 class PratictionerServiceTest {
     private PratictionerDTO pratictionerDTO;
@@ -119,5 +120,16 @@ class PratictionerServiceTest {
 
     // Adicione aqui outros métodos de teste para os outros métodos da classe PratictionerService
 
+    @Test
+    void findById_shouldThrowExceptionWhenPratictionerNotFound() {
+        // Arrange
+        String id = "1";
 
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        var exc = assertThrows(ResourceNotFoundException.class, () -> service.findById(id));
+        assertEquals(PRATICTIONER_NOT_FOUND + id, exc.getMessage());
+        verify(repository, times(1)).findById(id);
+    }
 }

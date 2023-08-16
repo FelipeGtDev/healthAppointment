@@ -17,9 +17,9 @@ public class Appointment {
     private String id;
     private LocalDateTime dateTime;
     private Pratictioner pratictioner;
+    private Patient patient;
     private Qualification healthProcedure;
     private ProcedureStatus procedureStatus;
-    private Patient patient;
     private Payment payment;
 
 }
