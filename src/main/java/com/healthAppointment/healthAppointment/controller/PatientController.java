@@ -55,7 +55,7 @@ public class PatientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") String id) {
-        PatientDTO response = service.findById(id);
+        PatientDTO response = service.getById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

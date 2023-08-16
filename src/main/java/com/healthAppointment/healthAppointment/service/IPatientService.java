@@ -1,8 +1,11 @@
 package com.healthAppointment.healthAppointment.service;
 
+import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
 
 public interface IPatientService {
 
@@ -14,7 +17,9 @@ public interface IPatientService {
 
     Page<PatientDTO> findAll(Pageable page);
 
-    PatientDTO findById(String id);
+    PatientDTO getById(String id);
+
+    Optional<Patient> findById(String id);
 
     Page<PatientDTO> findByName(String name, Pageable page);
 

@@ -51,9 +51,15 @@ public class PatientService implements IPatientService {
     }
 
     @Override
-    public PatientDTO findById(String id)  {
-        Optional<Patient> responseOp = repository.findById(id);
+    public PatientDTO getById(String id)  {
+        Optional<Patient> responseOp = findById(id);
         return responseOp.map(this::buildPatientDTO).orElse(null);
+    }
+
+    @Override
+    public Optional<Patient> findById(String id)  {
+        return repository.findById(id);
+        
     }
 
     @Override

@@ -159,7 +159,7 @@ class PatientServiceTest {
         when(modelMapper.map(patient, PatientDTO.class)).thenReturn(expectedResponse);
 
         // Act
-        PatientDTO response = patientService.findById(id);
+        PatientDTO response = patientService.getById(id);
 
         // Assert
         assertNotNull(response);
