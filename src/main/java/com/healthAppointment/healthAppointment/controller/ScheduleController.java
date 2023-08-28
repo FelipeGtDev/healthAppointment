@@ -51,36 +51,25 @@ public class ScheduleController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/add-patient/{patientId}")
+    @PutMapping("/{id}/add_patient/{patientId}")
     public ResponseEntity<?> addPatient(@PathVariable String id, @PathVariable String patientId) {
         try {
             ScheduleDTO response = service.addPatient(id, patientId);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (BusException e) {
+        } catch (BusException | ResourceNotFoundException | Exception e) {
             //TODO loggar erro
             return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
-        } catch (Exception e) {
-            //TODO loggar erro
-            return ResponseEntity.internalServerError().body(UPDATE_ERROR);
         }
     }
 
-    @PutMapping("/{id}/remove-patient/{patientId}")
+    @PutMapping("/{id}/remove_patient/{patientId}")
     public ResponseEntity<?> removePatient(@PathVariable String id, @PathVariable String patientId) {
         try {
             ScheduleDTO response = service.removePatient(id, patientId);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (BusException e) {
+        } catch (BusException | ResourceNotFoundException | Exception e) {
             //TODO loggar erro
             return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
-        } catch (ResourceNotFoundException e) {
-            //TODO loggar erro
-            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
-        } catch (Exception e) {
-            //TODO loggar erro
-            return ResponseEntity.internalServerError().body(UPDATE_ERROR);
         }
     }
 
@@ -89,15 +78,9 @@ public class ScheduleController {
         try {
             ScheduleDTO response = service.update(id, request);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | BusException | Exception e) {
             //TODO loggar erro
             return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
-        } catch (BusException e) {
-            //TODO loggar erro
-            return ResponseEntity.badRequest().body(UPDATE_ERROR + e.getMessage());
-        } catch (Exception e) {
-            //TODO loggar erro
-            return ResponseEntity.internalServerError().body(UPDATE_ERROR);
         }
     }
 
@@ -106,12 +89,9 @@ public class ScheduleController {
         try {
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | Exception e) {
             //TODO loggar erro
             return ResponseEntity.badRequest().body(DELETE_ERROR + e.getMessage());
-        } catch (Exception e) {
-            //TODO loggar erro
-            return ResponseEntity.internalServerError().body(DELETE_ERROR);
         }
     }
 

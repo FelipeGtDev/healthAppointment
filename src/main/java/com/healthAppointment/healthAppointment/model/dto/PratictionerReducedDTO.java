@@ -21,4 +21,8 @@ public class PratictionerReducedDTO {
     private HumanNameDTO name;
     @NotNull
     private List<QualificationReducedDTO> qualifications;
+
+    public PratictionerReducedDTO(String pratictionerId) {
+        this.id = pratictionerId;
+    }
 }

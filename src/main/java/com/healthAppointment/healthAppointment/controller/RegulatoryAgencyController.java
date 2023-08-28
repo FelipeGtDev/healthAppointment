@@ -27,11 +27,7 @@ public class RegulatoryAgencyController {
         try {
             RegulatoryAgencyDTO response = service.save(request);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body("Erro ao salvar Agência Reguladora: " + e.getMessage()
-                            .replace("java.lang.Exception: ", ""));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception | ResourceNotFoundException e) {
             return ResponseEntity.badRequest()
                     .body("Erro ao salvar Agência Reguladora: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
@@ -44,7 +40,7 @@ public class RegulatoryAgencyController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/listByName")
+    @GetMapping("/list_by_name")
     public ResponseEntity<Page<?>> findByName(
             @RequestParam("name") String name,
             @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {

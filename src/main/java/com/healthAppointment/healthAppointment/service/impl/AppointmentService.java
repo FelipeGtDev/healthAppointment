@@ -2,12 +2,15 @@ package com.healthAppointment.healthAppointment.service.impl;
 
 import com.healthAppointment.healthAppointment.exceptions.ResourceNotFoundException;
 import com.healthAppointment.healthAppointment.model.*;
+import com.healthAppointment.healthAppointment.model.dto.AppointmentDTO;
 import com.healthAppointment.healthAppointment.model.dto.PatientReducedDTO;
 import com.healthAppointment.healthAppointment.model.dto.ScheduleDTO;
 import com.healthAppointment.healthAppointment.repository.AppointmentRepository;
 import com.healthAppointment.healthAppointment.service.IAppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,6 +48,15 @@ public class AppointmentService implements IAppointmentService {
 
             repository.save(appointment);
         }
+    }
+
+    @Override
+    public Page<AppointmentDTO> findAll(AppointmentDTO appointmentDTO, String startDate, String endDate, Pageable page) {
+        return null;
+
+//        return repository.findAll(
+//                // todo usar QUeryDSL
+//        );
     }
 
     private void validateSchedule(ScheduleDTO request) throws ResourceNotFoundException {

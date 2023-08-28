@@ -60,7 +60,7 @@ public class PatientController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/listByName")
+    @GetMapping("/list_by_name")
     public ResponseEntity<Page<?>> findByName(
             @RequestParam("name") String name,
             @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
@@ -73,9 +73,7 @@ public class PatientController {
         try {
             PatientDTO response = service.update(id, request);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException | Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

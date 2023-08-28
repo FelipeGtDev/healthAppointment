@@ -34,7 +34,7 @@ public class QualificationController {
         }
     }
 
-    @PutMapping("/{specialityId}/addType/{typeId}")
+    @PutMapping("/{specialityId}/add_type/{typeId}")
     public ResponseEntity<?> addType(@PathVariable("specialityId") String specialityId, @PathVariable("typeId") String typeId) {
         try {
             Qualification response = service.addType(specialityId, typeId);
@@ -46,7 +46,7 @@ public class QualificationController {
         }
     }
 
-    @GetMapping("/listByTypes/{typeCode}")
+    @GetMapping("/list_by_types/{typeCode}")
     public List<ResponseEntity<?>> listByType(@PathVariable("typeCode") String typeCode) {
         try {
             List<QualificationReducedDTO> response = service.listByType(typeCode);

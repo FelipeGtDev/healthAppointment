@@ -56,18 +56,14 @@ public class PratictionerController {
         try {
             PratictionerDTO response = service.getById(id);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Erro ao buscar Profissional: " + e.getMessage()
-                            .replace("java.lang.Exception: ", ""));
-        } catch (ResourceNotFoundException e) {
+        } catch (Exception | ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao buscar Profissional: " + e.getMessage()
                             .replace("java.lang.Exception: ", ""));
         }
     }
 
-    @GetMapping("/listByName")
+    @GetMapping("/list_by_name")
     public ResponseEntity<Page<?>> findByname(
             @RequestParam("name") String name,
             @PageableDefault(size = 15, page = 0, direction = Sort.Direction.DESC, sort = {"createdAt"}) Pageable page) {
