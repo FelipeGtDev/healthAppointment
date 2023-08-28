@@ -232,7 +232,7 @@ public class Utils {
         var appointment = new AppointmentDTO();
 
         appointment.setId("1");
-        appointment.setDateTime("2023-12-01T08:00:00");
+        appointment.setDateTime(LocalDateTime.parse("2023-12-01T08:00:00"));
         appointment.setPratictioner(createPratictionerReducedDTO1());
         appointment.setPatient(createPatientReducedDTO(createPatient1()));
         appointment.setHealthProcedure(createQualificationReducedDTO(createQualificationPhisioterapy()));
@@ -245,7 +245,7 @@ public class Utils {
         var appointment = new AppointmentDTO();
 
         appointment.setId("2");
-        appointment.setDateTime("2023-12-01T08:00:00");
+        appointment.setDateTime(LocalDateTime.parse("2023-12-01T08:00:00"));
         appointment.setPratictioner(createPratictionerReducedDTO1());
         appointment.setPatient(createPatientReducedDTO(createPatient2()));
         appointment.setHealthProcedure(createQualificationReducedDTO(createQualificationPhisioterapy()));

@@ -24,5 +24,8 @@ public class AppConstants {
         public static final String DUPLICATE_PATIENT  = "Paciente duplicado";
         public static final String SCHEDULES_WITH_DIFFERENT_DATES  = "Lista de agendamento diário com mais de uma data";
 
+
+        // #################### APPOINTMENT ####################
+        public static final String APPOINTMENT_NOT_FOUND = "Consulta não encontrada.";
     }
 }

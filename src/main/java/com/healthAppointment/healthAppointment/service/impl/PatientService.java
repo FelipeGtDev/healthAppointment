@@ -5,6 +5,7 @@ import com.healthAppointment.healthAppointment.model.Patient;
 import com.healthAppointment.healthAppointment.model.dto.PatientDTO;
 import com.healthAppointment.healthAppointment.repository.PatientRepository;
 import com.healthAppointment.healthAppointment.service.IPatientService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,16 +16,12 @@ import java.util.Optional;
 import static com.healthAppointment.healthAppointment.model.AppConstants.Messages.PATIENT_NOT_FOUND;
 
 @Service
+@RequiredArgsConstructor
 public class PatientService implements IPatientService {
 
 
     private final PatientRepository repository;
     private final ModelMapper modelMapper;
-
-    private PatientService(PatientRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
-        this.modelMapper = modelMapper;
-    }
 
     public PatientDTO save(PatientDTO request) {
 
@@ -78,7 +75,9 @@ public class PatientService implements IPatientService {
     @Override
     public PatientDTO update(String id, PatientDTO request) throws ResourceNotFoundException {
         Optional<Patient> responseOp = findById(id);
-
+        if (responseOp.isEmpty()) {
+            throw new ResourceNotFoundException(PATIENT_NOT_FOUND + id);
+        }
         Patient patient = buildPatient(request);
         patient = repository.save(patient);
         return buildPatientDTO(patient);
